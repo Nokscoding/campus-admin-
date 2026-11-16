@@ -16,3 +16,26 @@
 .erp-notification-ping{font-size:10px;background:#e4d9ff;border-radius:7px;padding:4px 6px;margin-left:8px;letter-spacing:0}
 .erp-notification-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
 @media(max-width:680px){.erp-notification-entry{display:block}.erp-notification-actions{margin-top:15px}}
+
+/* Cloche de notifications dans l'ERP CAMPUS */
+.erp-notification-bar{display:flex;align-items:center;justify-content:flex-end;min-height:38px;margin:-14px 0 19px}
+.erp-notification-bell{position:relative}
+.erp-notification-trigger{position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;border:1px solid #e6def7;background:#f4efff;color:#5935ec;cursor:pointer}
+.erp-notification-trigger:hover,.erp-notification-trigger:focus-visible{background:#e8ddff;outline:2px solid #cabaf9}
+.erp-notification-count{position:absolute;top:-5px;right:-5px;border-radius:11px;background:#f18c36;color:white;font-size:10px;font-weight:900;min-width:19px;height:19px;padding:0 3px;display:grid;place-items:center}
+.erp-notification-popover{position:absolute;right:0;top:calc(100% + 11px);z-index:180;width:min(370px,calc(100vw - 30px));background:#fff;border-radius:18px;border:1px solid #e7dff4;box-shadow:0 16px 55px #190c492c;overflow:hidden;max-height:70vh;display:flex;flex-direction:column;color:#251743}
+.erp-notification-popover-head{display:flex;justify-content:space-between;padding:17px 17px 12px;gap:15px;border-bottom:1px solid #efeaf8}
+.erp-notification-popover-head strong{display:block;font:850 19px Outfit,Arial,sans-serif}
+.erp-notification-popover-head small{display:block;font-size:12px;color:#82788f}
+.erp-notification-popover-head button{background:#f4efff;border:0;border-radius:9px;color:#6541c4;font-size:21px;width:31px;height:31px;cursor:pointer}
+.erp-notification-popover-list{overflow-y:auto}
+.erp-notification-popover-item{padding:12px 17px;border-bottom:1px solid #eee9f8}
+.erp-notification-popover-item.unread{background:#f7f3ff}
+.erp-notification-popover-item strong{display:block;font-size:13px}
+.erp-notification-popover-item p{font-size:12px;line-height:1.55;color:#665b7d;margin:5px 0}
+.erp-notification-popover-item small{font-size:11px;color:#968ca5}
+.erp-notification-popover-item button{border:0;background:transparent;padding:4px 0;color:#5935ec;font-size:11px;font-weight:800;cursor:pointer;display:block}
+.erp-notification-popover-empty{font-size:13px;line-height:1.6;padding:20px;text-align:center;color:#746889}
+.erp-notification-popover-foot{display:flex;gap:10px;flex-wrap:wrap;padding:13px 17px;border-top:1px solid #eee9f8}
+.erp-notification-popover-foot button{border:0;background:none;color:#5435c9;font-weight:850;font-size:12px;cursor:pointer;padding:3px 0}
+@media(max-width:760px){.erp-notification-bar{margin:-8px 0 17px}.erp-notification-trigger{width:40px;height:40px}.erp-notification-popover{position:fixed;left:15px;right:15px;top:125px;width:auto;max-height:70vh}}
