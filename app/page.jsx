@@ -82,7 +82,7 @@ export default function ERP(){
   if(error){setToast('Impossible de mettre à jour les notifications.');return}
   setNotifications(old=>old.map(x=>({...x,read_at:x.read_at||now})));
  }
- const const canOperate=role==='admin'||role==='operations',canFinance=role==='admin'||role==='finance',canStaff=role==='admin';
+ const canOperate=role==='admin'||role==='operations',canFinance=role==='admin'||role==='finance',canStaff=role==='admin';
  const activeAgents=agents.filter(s=>s.role==='agent'&&s.active);
  const nameOf=(id)=>profiles.find(p=>p.user_id===id)?.display_name||'Étudiant',phoneOf=(id)=>profiles.find(p=>p.user_id===id)?.phone||'Non renseigné';
  const unreadCount=notifications.filter(n=>!n.read_at).length;
