@@ -1,0 +1,1 @@
+import './style.css';export const metadata={title:'CAMPUS ERP | Espace réservé',robots:{index:false,follow:false}};export default function Layout({children}){return <html lang="fr"><body>{children}</body></html>}
