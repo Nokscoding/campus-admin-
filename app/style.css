@@ -52,3 +52,7 @@
 .campus-category-review select{width:100%;background:white;border:1px solid #ded5ef;border-radius:10px;padding:10px;margin:0 0 10px;color:#241934}
 .campus-category-review .button,.campus-category-review .soft-button{max-width:100%;white-space:normal;min-height:40px}
 @media(max-width:650px){.campus-category-review{padding:12px}}
+
+/* Remise sur le campus : règle opérationnelle visible dans les commandes */
+.campus-delivery-scope{background:#f1edff;border:1px solid #ddd1ff;border-radius:12px;padding:12px 14px;margin:13px 0;font-size:12px;line-height:1.6;color:#51436f}
+.campus-delivery-scope strong{color:#5634b4}
