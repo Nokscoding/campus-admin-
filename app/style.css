@@ -39,3 +39,16 @@
 .erp-notification-popover-foot{display:flex;gap:10px;flex-wrap:wrap;padding:13px 17px;border-top:1px solid #eee9f8}
 .erp-notification-popover-foot button{border:0;background:none;color:#5435c9;font-weight:850;font-size:12px;cursor:pointer;padding:3px 0}
 @media(max-width:760px){.erp-notification-bar{margin:-8px 0 17px}.erp-notification-trigger{width:40px;height:40px}.erp-notification-popover{position:fixed;left:15px;right:15px;top:125px;width:auto;max-height:70vh}}
+
+/* Modération des défauts et catégories proposées */
+.campus-review-defect{background:#fff7ed;border:1px solid #efd2ae;border-radius:12px;padding:13px 14px;margin:14px 0 12px}
+.campus-review-defect strong{font-size:12px;color:#924f21}
+.campus-review-defect p{font-size:12px;color:#6a4f37;line-height:1.6;margin:6px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.campus-review-no-defect{font-size:12px;color:#8a8099;margin:11px 0}
+.campus-category-review{background:#f6f2ff;border:1px solid #dcd0fa;border-radius:13px;padding:15px;margin:13px 0}
+.campus-category-review>strong{display:block;font-size:13px;color:#5634b4;overflow-wrap:anywhere}
+.campus-category-review p{font-size:12px;line-height:1.55;color:#6f6480}
+.campus-category-review label{display:block;font-size:12px;font-weight:800;margin:13px 0 5px}
+.campus-category-review select{width:100%;background:white;border:1px solid #ded5ef;border-radius:10px;padding:10px;margin:0 0 10px;color:#241934}
+.campus-category-review .button,.campus-category-review .soft-button{max-width:100%;white-space:normal;min-height:40px}
+@media(max-width:650px){.campus-category-review{padding:12px}}
