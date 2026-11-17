@@ -56,3 +56,16 @@
 /* Remise sur le campus : règle opérationnelle visible dans les commandes */
 .campus-delivery-scope{background:#f1edff;border:1px solid #ddd1ff;border-radius:12px;padding:12px 14px;margin:13px 0;font-size:12px;line-height:1.6;color:#51436f}
 .campus-delivery-scope strong{color:#5634b4}
+
+/* Notifications du personnel et suivi des anomalies CAMPUS */
+.erp-notification-bar{gap:12px}
+.erp-notification-bar .campus-push-control.compact{display:flex;align-items:center;max-width:220px}
+.erp-notification-bar .campus-push-control.compact button{border:1px solid #dfd6f4;border-radius:11px;background:#f5f1ff;color:#5c3bb8;cursor:pointer;font-size:11px;font-weight:800;padding:10px 12px;line-height:1.4}
+.erp-notification-bar .campus-push-message{font-size:11px;color:#6752a8}
+.campus-bugs-list{display:grid;gap:14px}
+.campus-bug-item{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border:1px solid #eae4f4;border-radius:14px;padding:17px}
+.campus-bug-item h3{font-size:17px;margin:9px 0 5px}
+.campus-bug-item p{color:#6b637b;font-size:13px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+.campus-bug-item small{font-size:11px;color:#8c829f}
+.campus-bug-item select{min-width:135px;border:1px solid #e2d7f4;border-radius:10px;padding:9px;background:#fff}
+@media(max-width:650px){.erp-notification-bar{margin:0 0 14px}.erp-notification-bar .campus-push-control.compact button{font-size:10px;padding:9px}.campus-bug-item{display:block}.campus-bug-item select{margin-top:13px;width:100%}}
