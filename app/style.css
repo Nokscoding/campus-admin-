@@ -95,3 +95,24 @@
 .campus-erp-seller-filter{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#f5f0ff;border:1px solid #dfd4f8;border-radius:12px;padding:13px 16px;margin-bottom:16px;font-size:12px;color:#4c3686}
 .campus-erp-seller-filter button{border:0;background:#fff;color:#5736ca;border-radius:8px;padding:9px 12px;cursor:pointer;font-weight:800;font-size:11px}
 @media(max-width:650px){.campus-erp-sellers-grid{grid-template-columns:1fr}.campus-erp-seller-head{gap:9px}.campus-erp-seller-toggle{padding:8px;font-size:10px}.campus-erp-seller-details dl>div{font-size:11px}}
+
+/* CAMPUS ERP – moderating and messaging sellers */
+.status-hidden{background:#fff0df!important;color:#9a5607!important}
+.status-deleted{background:#e9e6ee!important;color:#625c6e!important}
+.campus-moderation-filter{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border:1px solid #e8def7;background:#f8f5ff;border-radius:12px;padding:11px 14px;margin:0 0 16px;font-size:12px;color:#63587b}
+.campus-moderation-filter button{background:white;color:#5135c1;border:1px solid #d9caf2;padding:9px 13px;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer}
+.campus-moderation-panel{border-top:1px solid #eae2f6;margin-top:18px;padding-top:16px}
+.campus-moderation-heading{display:grid;gap:4px;margin-bottom:10px}
+.campus-moderation-heading strong{font-size:13px;color:#332544}
+.campus-moderation-heading small{font-size:11px;color:#857b93}
+.campus-moderation-panel label{display:block;color:#51455f;font-size:11px;font-weight:800;margin:7px 0}
+.campus-moderation-panel textarea{display:block;width:100%;min-width:0;resize:vertical;border-radius:11px;border:1px solid #ddd4ed;background:#fff;padding:11px 12px;font:inherit;font-size:12px;line-height:1.55;color:#2c2436}
+.campus-moderation-panel textarea:focus-visible{outline:2px solid #957bec;outline-offset:1px}
+.campus-moderation-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.campus-moderation-btn{padding:9px 12px;border-radius:10px;background:#fff;color:#553ab3;border:1px solid #d8cdf0;font:800 11px Outfit,Arial,sans-serif;cursor:pointer;max-width:100%;white-space:normal;text-align:center;line-height:1.35}
+.campus-moderation-btn.primary{background:#5b3bd8;border-color:#5b3bd8;color:white}
+.campus-moderation-btn.caution{background:#fff8ec;border-color:#edc993;color:#925711}
+.campus-moderation-btn.danger{background:#fff5f5;border-color:#f0b7bd;color:#a42c39}
+.campus-moderation-btn:disabled{opacity:.5;cursor:not-allowed}
+.campus-moderation-footnote{display:block;color:#7b728a;font-size:10.5px;line-height:1.5;margin-top:12px}
+@media(max-width:650px){.campus-moderation-filter{align-items:flex-start}.campus-moderation-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.campus-moderation-btn{min-height:40px}.campus-moderation-btn.danger{grid-column:1/-1}}
