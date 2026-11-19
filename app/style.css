@@ -69,3 +69,29 @@
 .campus-bug-item small{font-size:11px;color:#8c829f}
 .campus-bug-item select{min-width:135px;border:1px solid #e2d7f4;border-radius:10px;padding:9px;background:#fff}
 @media(max-width:650px){.erp-notification-bar{margin:0 0 14px}.erp-notification-bar .campus-push-control.compact button{font-size:10px;padding:9px}.campus-bug-item{display:block}.campus-bug-item select{margin-top:13px;width:100%}}
+
+/* Seller identity in CAMPUS ERP – visible only to authorized moderation staff */
+.campus-erp-seller{background:#faf8ff;border:1px solid #e7e0f5;border-radius:14px;padding:13px;margin:15px 0 10px;min-width:0}
+.campus-erp-seller-head{display:flex;align-items:center;gap:11px;min-width:0}
+.campus-seller-avatar{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border-radius:50%;background:#eae2fc;color:#5f3bc0;font-size:18px;font-weight:900;background-repeat:no-repeat;box-shadow:inset 0 0 0 1px #eadff8}
+.campus-seller-avatar.large{width:64px;height:64px;flex-basis:64px}
+.campus-erp-seller-identity{display:grid;gap:3px;min-width:0;flex:1}
+.campus-erp-seller-identity small{font-size:10px;font-weight:800;color:#7d7194}
+.campus-erp-seller-identity strong{font-size:13px;color:#2e2444;overflow-wrap:anywhere;line-height:1.3}
+.campus-erp-seller-identity span{font-size:11px;color:#776d8b;overflow-wrap:anywhere}
+.campus-erp-seller-toggle{flex-shrink:0;border:1px solid #d9c9f6;border-radius:10px;padding:9px 10px;background:#fff;color:#5c35c0;font-size:11px;font-weight:800;cursor:pointer}
+.campus-erp-seller-toggle:hover,.campus-erp-seller-toggle:focus-visible{background:#f0eaff;outline:2px solid #d4c6f3}
+.campus-erp-seller-details{margin-top:13px;border-top:1px solid #e9e1f4;padding-top:13px}
+.campus-erp-seller-details dl{margin:0;display:grid;gap:10px}
+.campus-erp-seller-details dl>div{display:flex;justify-content:space-between;gap:15px;font-size:12px;align-items:baseline}
+.campus-erp-seller-details dt{color:#81758e;flex-shrink:0}
+.campus-erp-seller-details dd{color:#302640;font-weight:750;text-align:right;margin:0;min-width:0;overflow-wrap:anywhere}
+.campus-erp-seller-details a{color:#5734bb;text-decoration:underline;text-underline-offset:2px}
+.campus-erp-seller-id{font-family:monospace;font-size:11px}
+.campus-erp-seller-go{margin-top:17px;cursor:pointer;background:#5735de;color:white;border:0;border-radius:10px;padding:11px 14px;font-size:12px;font-weight:800}
+.campus-erp-seller-missing{font-size:11px;color:#806e91;margin:12px 0 0;line-height:1.6}
+.campus-erp-sellers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;align-items:start}
+.campus-erp-sellers-grid>.campus-erp-seller{margin:0;padding:18px}
+.campus-erp-seller-filter{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#f5f0ff;border:1px solid #dfd4f8;border-radius:12px;padding:13px 16px;margin-bottom:16px;font-size:12px;color:#4c3686}
+.campus-erp-seller-filter button{border:0;background:#fff;color:#5736ca;border-radius:8px;padding:9px 12px;cursor:pointer;font-weight:800;font-size:11px}
+@media(max-width:650px){.campus-erp-sellers-grid{grid-template-columns:1fr}.campus-erp-seller-head{gap:9px}.campus-erp-seller-toggle{padding:8px;font-size:10px}.campus-erp-seller-details dl>div{font-size:11px}}
