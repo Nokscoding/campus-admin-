@@ -19,7 +19,7 @@ function SellerAvatar({profile,sb,large=false}){
  }else if(index===8){
   style={backgroundImage:"url('https://res.cloudinary.com/jrgtsxkt/image/upload/v1795113099/campus/avatars/avatar-09-tresses-noires.webp')",backgroundSize:'cover',backgroundPosition:'center'};
  }else if(index>=0){
-  style={backgroundImage:"url('https://www.campus-rdc.com/avatars/campus-sprite.webp')",backgroundSize:'400% 300%',backgroundPosition:(index%4)*100/3+'% '+Math.floor(index/4)*50+'%'};
+  style={backgroundImage:"url('https://res.cloudinary.com/jrgtsxkt/image/upload/e_upscale/f_webp,q_90/v1795169694/campus/avatars/campus-avatar-sprite-original.webp')",backgroundSize:'400% 300%',backgroundPosition:(index%4)*100/3+'% '+Math.floor(index/4)*50+'%'};
  }
  return <span className={'campus-seller-avatar'+(large?' large':'')} style={style||{}} role="img" aria-label="Avatar du vendeur">
   {!style&&(profile?.display_name?.trim()?.charAt(0).toUpperCase()||'C')}
