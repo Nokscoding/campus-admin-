@@ -133,3 +133,17 @@
 .campus-listing-filter-results span{width:100%;font-size:11px;color:#8b6a3e;line-height:1.5}
 @media(max-width:900px){.campus-listing-filter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:650px){.campus-listing-filter-panel{padding:14px}.campus-listing-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.campus-listing-filter-grid .campus-listing-filter-search{grid-column:1/-1}.campus-listing-filter-header strong{font-size:14px}.campus-listing-filter-grid input,.campus-listing-filter-grid select{font-size:12px}}
+
+/* Aperçu photo vendeurs CAMPUS ERP (mobile et ordinateur) */
+.campus-erp-seller-avatar-button{width:44px;height:44px;flex:0 0 44px;padding:0;border:0;background:none;border-radius:50%;cursor:zoom-in;display:grid;place-items:center}
+.campus-erp-seller-avatar-button .campus-seller-avatar{width:44px;height:44px}
+.campus-erp-seller-avatar-button:focus-visible{outline:3px solid #9976ed;outline-offset:4px}
+.campus-erp-avatar-backdrop{position:fixed;inset:0;z-index:3100;display:grid;place-items:center;padding:18px;background:#150d2fbf;backdrop-filter:blur(5px)}
+.campus-erp-avatar-dialog{position:relative;display:flex;align-items:center;flex-direction:column;gap:0;width:min(420px,100%);max-height:calc(100dvh - 36px);overflow-y:auto;text-align:center;background:white;border-radius:22px;padding:40px 24px 24px;box-shadow:0 20px 75px #130c3559}
+.campus-erp-avatar-close{position:absolute;top:12px;right:13px;display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:50%;background:#f1ecfc;color:#5734ba;font-size:25px;cursor:pointer}
+.campus-erp-avatar-overline{font-size:10px;letter-spacing:.08em;color:#7663a8;font-weight:900;margin-bottom:22px}
+.campus-erp-avatar-dialog .campus-seller-avatar.large{width:min(260px,68vw);height:auto;aspect-ratio:1/1;flex:0 0 auto;font-size:60px;border-radius:50%;box-shadow:0 0 0 5px #f0eaff;background-repeat:no-repeat}
+.campus-erp-avatar-dialog h3{font:850 23px Outfit,Arial,sans-serif;color:#281b40;margin:24px 0 5px;overflow-wrap:anywhere}
+.campus-erp-avatar-dialog p{color:#776c8b;font-size:13px;margin:0}
+.campus-erp-avatar-done{margin-top:24px;border:0;border-radius:11px;background:#5b3ad5;color:white;padding:13px 22px;width:100%;font:800 13px Outfit,Arial,sans-serif;cursor:pointer}
+@media(max-width:650px){.campus-erp-avatar-dialog{padding:34px 18px 20px}.campus-erp-avatar-dialog .campus-seller-avatar.large{width:min(245px,70vw)}}

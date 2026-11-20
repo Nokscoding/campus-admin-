@@ -26,13 +26,24 @@ function SellerAvatar({profile,sb,large=false}){
  </span>;
 }
 function SellerProfileCard({profile,sellerId,sb,defaultExpanded=false,adsCount,onShowAds}){
- const [expanded,setExpanded]=useState(defaultExpanded);
+ const [expanded,setExpanded]=useState(defaultExpanded),[avatarExpanded,setAvatarExpanded]=useState(false);
+ const avatarClose=useRef(null);
+ useEffect(()=>{
+  if(!avatarExpanded)return;
+  const previous=document.activeElement;
+  const overflow=document.body.style.overflow;
+  document.body.style.overflow='hidden';
+  avatarClose.current?.focus();
+  const onEscape=e=>{if(e.key==='Escape')setAvatarExpanded(false)};
+  document.addEventListener('keydown',onEscape);
+  return()=>{document.removeEventListener('keydown',onEscape);document.body.style.overflow=overflow;previous?.focus?.()};
+ },[avatarExpanded]);
  const displayName=profile?.display_name?.trim()||'Nom non renseigné';
  const phone=profile?.phone?.trim()||'';
  const phoneHref=phone?'tel:'+phone.replace(/[^+0-9]/g,''):null;
  return <section className="campus-erp-seller" aria-label="Profil du vendeur">
   <div className="campus-erp-seller-head">
-   <SellerAvatar profile={profile} sb={sb}/>
+   <button type="button" className="campus-erp-seller-avatar-button" onClick={()=>setAvatarExpanded(true)} aria-label={'Agrandir la photo de profil de '+displayName} title="Voir la photo en grand"><SellerAvatar profile={profile} sb={sb}/></button>
    <div className="campus-erp-seller-identity"><small>Vendeur CAMPUS</small><strong>{displayName}</strong><span>{profile?.university||'Université non renseignée'}</span></div>
    <button type="button" className="campus-erp-seller-toggle" onClick={()=>setExpanded(v=>!v)} aria-expanded={expanded}>{expanded?'Masquer':'Voir le profil'}</button>
   </div>
@@ -47,6 +58,16 @@ function SellerProfileCard({profile,sellerId,sb,defaultExpanded=false,adsCount,o
    </dl>
    {onShowAds&&<button className="campus-erp-seller-go" type="button" onClick={()=>onShowAds(sellerId)}>Voir ses annonces</button>}
    {!profile&&<p className="campus-erp-seller-missing">Le profil de cet étudiant n'est pas disponible avec les autorisations de ce compte.</p>}
+  </div>}
+  {avatarExpanded&&<div className="campus-erp-avatar-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setAvatarExpanded(false)}}>
+   <section className="campus-erp-avatar-dialog" role="dialog" aria-modal="true" aria-labelledby={'campus-erp-avatar-title-'+sellerId}>
+    <button ref={avatarClose} type="button" className="campus-erp-avatar-close" onClick={()=>setAvatarExpanded(false)} aria-label="Fermer la photo">×</button>
+    <span className="campus-erp-avatar-overline">PHOTO DE PROFIL CAMPUS</span>
+    <SellerAvatar profile={profile} sb={sb} large/>
+    <h3 id={'campus-erp-avatar-title-'+sellerId}>{displayName}</h3>
+    <p>{profile?.university||'Étudiant CAMPUS'}</p>
+    <button type="button" className="campus-erp-avatar-done" onClick={()=>setAvatarExpanded(false)}>Fermer</button>
+   </section>
   </div>}
  </section>;
 }
