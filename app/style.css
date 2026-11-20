@@ -116,3 +116,20 @@
 .campus-moderation-btn:disabled{opacity:.5;cursor:not-allowed}
 .campus-moderation-footnote{display:block;color:#7b728a;font-size:10.5px;line-height:1.5;margin-top:12px}
 @media(max-width:650px){.campus-moderation-filter{align-items:flex-start}.campus-moderation-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.campus-moderation-btn{min-height:40px}.campus-moderation-btn.danger{grid-column:1/-1}}
+
+/* Filtres du catalogue administratif CAMPUS – section Annonces */
+.campus-listing-filter-panel{background:#fff;border:1px solid #e7e1f1;border-radius:17px;padding:18px;margin:0 0 18px;box-shadow:0 4px 19px #27174606}
+.campus-listing-filter-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.campus-listing-filter-header strong{font:800 16px Outfit,Arial,sans-serif;color:#2d2041}
+.campus-listing-filter-header button{background:transparent;color:#6140c2;border:0;font-size:12px;font-weight:800;padding:7px;cursor:pointer}
+.campus-listing-filter-header button:disabled{opacity:.35;cursor:default}
+.campus-listing-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.campus-listing-filter-grid label{display:flex;flex-direction:column;gap:6px;min-width:0;color:#6c607f;font-size:11px;font-weight:800}
+.campus-listing-filter-grid .campus-listing-filter-search{grid-column:span 2}
+.campus-listing-filter-grid input,.campus-listing-filter-grid select{display:block;min-width:0;width:100%;border:1px solid #e3dced;background:#faf9fe;color:#2e2540;border-radius:11px;padding:10px 11px;font:500 12px Outfit,Arial,sans-serif;min-height:41px}
+.campus-listing-filter-grid input:focus-visible,.campus-listing-filter-grid select:focus-visible{outline:2px solid #8b70ed;outline-offset:1px}
+.campus-listing-filter-results{display:flex;align-items:center;flex-wrap:wrap;gap:5px;font-size:12px;color:#655977;border-top:1px solid #efebf5;margin-top:15px;padding-top:13px}
+.campus-listing-filter-results strong{color:#5434bb;font-size:15px}
+.campus-listing-filter-results span{width:100%;font-size:11px;color:#8b6a3e;line-height:1.5}
+@media(max-width:900px){.campus-listing-filter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.campus-listing-filter-panel{padding:14px}.campus-listing-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.campus-listing-filter-grid .campus-listing-filter-search{grid-column:1/-1}.campus-listing-filter-header strong{font-size:14px}.campus-listing-filter-grid input,.campus-listing-filter-grid select{font-size:12px}}

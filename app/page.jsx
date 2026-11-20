@@ -55,7 +55,7 @@ export default function ERP(){
  const sb=useMemo(()=>{const u=process.env.NEXT_PUBLIC_SUPABASE_URL,k=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;return u&&k?createClient(u,k):null},[]);
  const [user,setUser]=useState(null),[role,setRole]=useState(null),[checking,setChecking]=useState(true),[busy,setBusy]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[toast,setToast]=useState(''),[tab,setTab]=useState('overview'),[bellOpen,setBellOpen]=useState(false),[permission,setPermission]=useState('unsupported');
  const bellRef=useRef(null);
- const [bugs,setBugs]=useState([]),[orders,setOrders]=useState([]),[categories,setCategories]=useState([]),[fallbackByListing,setFallbackByListing]=useState({}),[notifications,setNotifications]=useState([]),[listings,setListings]=useState([]),[agents,setAgents]=useState([]),[profiles,setProfiles]=useState([]),[sellerFilter,setSellerFilter]=useState(null),[showDeleted,setShowDeleted]=useState(false),[moderationMessages,setModerationMessages]=useState({}),[cash,setCash]=useState([]),[inspections,setInspections]=useState([]);
+ const [bugs,setBugs]=useState([]),[orders,setOrders]=useState([]),[categories,setCategories]=useState([]),[fallbackByListing,setFallbackByListing]=useState({}),[notifications,setNotifications]=useState([]),[listings,setListings]=useState([]),[agents,setAgents]=useState([]),[profiles,setProfiles]=useState([]),[sellerFilter,setSellerFilter]=useState(null),[showDeleted,setShowDeleted]=useState(false),[listingFilters,setListingFilters]=useState({search:'',status:'',university:'',category:'',currency:'',minPrice:'',maxPrice:'',sort:'newest'}),[moderationMessages,setModerationMessages]=useState({}),[cash,setCash]=useState([]),[inspections,setInspections]=useState([]);
  const [quoteId,setQuoteId]=useState(null),[deliveryFee,setDeliveryFee]=useState(''),[assignedAgent,setAssignedAgent]=useState(''),[quoteNote,setQuoteNote]=useState('');
  const [inspectionNotes,setInspectionNotes]=useState(''),[inspectionFiles,setInspectionFiles]=useState([]),[receipt,setReceipt]=useState(''),[staffEmail,setStaffEmail]=useState(''),[staffRole,setStaffRole]=useState('agent'),[staffActive,setStaffActive]=useState(true);
  async function refresh(account){
@@ -148,12 +148,35 @@ export default function ERP(){
  const activeAgents=agents.filter(s=>['agent','admin'].includes(s.role)&&s.active);
  const profileOf=(id)=>profiles.find(p=>p.user_id===id)||null;
  const sellers=[...new Set(listings.map(l=>l.seller_id).filter(Boolean))];
- const sellerListings=listings.filter(l=>(!sellerFilter||l.seller_id===sellerFilter)&&(
+ const listingFiltersDefault={search:'',status:'',university:'',category:'',currency:'',minPrice:'',maxPrice:'',sort:'newest'};
+ const updateListingFilter=(key,value)=>setListingFilters(prev=>({...prev,[key]:value}));
+ const resetListingFilters=()=>{setListingFilters({...listingFiltersDefault});setSellerFilter(null)};
+ const lookupFilterText=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ const baseListings=listings.filter(l=>(!sellerFilter||l.seller_id===sellerFilter)&&(
   tab==='review'?l.status==='pending':
-  (showDeleted?l.status==='deleted':l.status!=='deleted'&&l.status!=='pending')
+  showDeleted?l.status==='deleted':l.status!=='deleted'&&l.status!=='pending'
  ));
+ const categoryFilterOptions=[...new Set(listings.filter(l=>l.status!=='pending'&&l.status!=='deleted').map(l=>l.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr'));
+ const universityFilterOptions=[...new Set(listings.filter(l=>l.status!=='pending'&&l.status!=='deleted').map(l=>profiles.find(p=>p.user_id===l.seller_id)?.university).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr'));
+ const sellerListings=tab==='review'?baseListings:baseListings.filter(l=>{
+  const q=lookupFilterText(listingFilters.search.trim()),p=profiles.find(x=>x.user_id===l.seller_id);
+  if(q&&!lookupFilterText([l.title,l.description,p?.display_name,p?.phone].join(' ')).includes(q))return false;
+  if(listingFilters.status&&l.status!==listingFilters.status)return false;
+  if(listingFilters.university&&p?.university!==listingFilters.university)return false;
+  if(listingFilters.category&&l.category!==listingFilters.category)return false;
+  if(listingFilters.currency&&l.currency!==listingFilters.currency)return false;
+  if(listingFilters.minPrice!==''&&Number(l.price)<Number(listingFilters.minPrice))return false;
+  if(listingFilters.maxPrice!==''&&Number(l.price)>Number(listingFilters.maxPrice))return false;
+  return true;
+ }).sort((a,b)=>{
+  if(listingFilters.sort==='oldest')return new Date(a.created_at)-new Date(b.created_at);
+  if(listingFilters.sort==='price_asc')return Number(a.price)-Number(b.price);
+  if(listingFilters.sort==='price_desc')return Number(b.price)-Number(a.price);
+  return new Date(b.created_at)-new Date(a.created_at);
+ });
+ const listingFiltersActive=Boolean(sellerFilter||listingFilters.search||listingFilters.status||listingFilters.university||listingFilters.category||listingFilters.currency||listingFilters.minPrice!==''||listingFilters.maxPrice!==''||listingFilters.sort!=='newest');
  const showSellerListings=(sellerId)=>{
-  setSellerFilter(sellerId);setShowDeleted(false);
+  setSellerFilter(sellerId);setShowDeleted(false);setListingFilters({...listingFiltersDefault});
   setTab(listings.some(l=>l.seller_id===sellerId&&l.status!=='pending'&&l.status!=='deleted')?'listings':'review');
  };
  const nameOf=(id)=>profileOf(id)?.display_name||'Étudiant',phoneOf=(id)=>profileOf(id)?.phone||'Non renseigné';
@@ -188,7 +211,36 @@ export default function ERP(){
  {(tab==='review'||tab==='listings')&&canOperate&&<>{contentHeader(
  tab==='review'?'Annonces à valider':'Gestion des annonces',
  tab==='review'?'Nouvelles annonces et corrections soumises à approbation avant d’être visibles.':'Annonces déjà traitées : publiées, masquées, refusées ou clôturées. Les annonces en attente sont dans « À valider ».'
-)}{tab==='listings'&&<div className="campus-moderation-filter"><span>{showDeleted?'Archives des annonces supprimées':'Annonces hors attente de validation'}</span><button type="button" onClick={()=>setShowDeleted(v=>!v)}>{showDeleted?'Retour aux annonces':'Voir les annonces supprimées'}</button></div>}{sellerFilter&&<div className="campus-erp-seller-filter"><span>Annonces de <strong>{nameOf(sellerFilter)}</strong></span><button type="button" onClick={()=>setSellerFilter(null)}>Afficher toutes les annonces</button></div>}{!sellerListings.length?<div className="empty-panel">{tab==='review'?'Aucune annonce en attente de validation.':showDeleted?'Aucune annonce supprimée.':'Aucune annonce dans cette section.'}</div>:<div className="listing-grid">{sellerListings.map(l=><article className="listing-card" key={l.id}><div className="listing-cover">{l.images?.[0]?<img src={l.images[0]} alt={l.title}/>:<div className="placeholder-cover"><Icon name="package" size={46}/></div>}</div><div className="listing-body"><span className={'status-tag status-'+l.status}>{status[l.status]||l.status}</span><h3>{l.title}</h3><p className="muted">{l.description}</p><strong>{curr(l.price,l.currency)}</strong><div className="listing-meta">{l.category_proposal&&l.status==='pending'?'Catégorie à valider':l.category} · {l.images?.length||0} photo(s)</div>
+)}{tab==='listings'&&<>
+ <div className="campus-moderation-filter"><span>{showDeleted?'Archives des annonces supprimées':'Annonces hors attente de validation'}</span><button type="button" onClick={()=>{setShowDeleted(v=>!v);updateListingFilter('status','')}}>{showDeleted?'Retour aux annonces':'Voir les annonces supprimées'}</button></div>
+ <section className="campus-listing-filter-panel" aria-label="Filtrer les annonces">
+  <div className="campus-listing-filter-header"><strong>Rechercher et filtrer</strong><button type="button" onClick={resetListingFilters} disabled={!listingFiltersActive}>Effacer les filtres</button></div>
+  <div className="campus-listing-filter-grid">
+   <label className="campus-listing-filter-search">Rechercher un produit ou un vendeur<input type="search" value={listingFilters.search} placeholder="Nom du produit, vendeur…" onChange={e=>updateListingFilter('search',e.target.value)} autoComplete="off"/></label>
+   {!showDeleted&&<label>Statut<select value={listingFilters.status} onChange={e=>updateListingFilter('status',e.target.value)}>
+    <option value="">Tous les statuts</option><option value="published">Publiées</option><option value="hidden">Masquées</option><option value="rejected">Refusées</option><option value="draft">Brouillons</option><option value="reserved">Réservées</option><option value="sold">Vendues</option><option value="archived">Archivées</option>
+   </select></label>}
+   <label>Université<select value={listingFilters.university} onChange={e=>updateListingFilter('university',e.target.value)}>
+    <option value="">Toutes les universités</option>{universityFilterOptions.map(u=><option key={u} value={u}>{u}</option>)}
+   </select></label>
+   <label>Catégorie<select value={listingFilters.category} onChange={e=>updateListingFilter('category',e.target.value)}>
+    <option value="">Toutes les catégories</option>{categoryFilterOptions.map(c=><option key={c} value={c}>{c}</option>)}
+   </select></label>
+   <label>Devise<select value={listingFilters.currency} onChange={e=>updateListingFilter('currency',e.target.value)}>
+    <option value="">Toutes</option><option value="USD">USD</option><option value="CDF">CDF</option>
+   </select></label>
+   <label>Prix minimum<input type="number" min="0" step="any" inputMode="decimal" placeholder="Min." value={listingFilters.minPrice} onChange={e=>updateListingFilter('minPrice',e.target.value)}/></label>
+   <label>Prix maximum<input type="number" min="0" step="any" inputMode="decimal" placeholder="Max." value={listingFilters.maxPrice} onChange={e=>updateListingFilter('maxPrice',e.target.value)}/></label>
+   <label>Trier par<select value={listingFilters.sort} onChange={e=>updateListingFilter('sort',e.target.value)}>
+    <option value="newest">Plus récentes</option><option value="oldest">Plus anciennes</option><option value="price_asc">Prix croissant</option><option value="price_desc">Prix décroissant</option>
+   </select></label>
+  </div>
+  <div className="campus-listing-filter-results" aria-live="polite">
+   <strong>{sellerListings.length}</strong> annonce{sellerListings.length!==1?'s':''} affichée{sellerListings.length!==1?'s':''} sur {baseListings.length}
+   {listingFilters.currency===''&&(listingFilters.minPrice!==''||listingFilters.maxPrice!=='')&&<span>Les montants sont comparés dans leur devise d’origine. Choisis USD ou CDF pour un filtre de prix précis.</span>}
+  </div>
+ </section>
+ </>}{sellerFilter&&<div className="campus-erp-seller-filter"><span>Annonces de <strong>{nameOf(sellerFilter)}</strong></span><button type="button" onClick={()=>setSellerFilter(null)}>Afficher toutes les annonces</button></div>}{!sellerListings.length?<div className="empty-panel">{tab==='review'?'Aucune annonce en attente de validation.':listingFiltersActive?'Aucune annonce ne correspond aux filtres choisis.':showDeleted?'Aucune annonce supprimée.':'Aucune annonce dans cette section.'}</div>:<div className="listing-grid">{sellerListings.map(l=><article className="listing-card" key={l.id}><div className="listing-cover">{l.images?.[0]?<img src={l.images[0]} alt={l.title}/>:<div className="placeholder-cover"><Icon name="package" size={46}/></div>}</div><div className="listing-body"><span className={'status-tag status-'+l.status}>{status[l.status]||l.status}</span><h3>{l.title}</h3><p className="muted">{l.description}</p><strong>{curr(l.price,l.currency)}</strong><div className="listing-meta">{l.category_proposal&&l.status==='pending'?'Catégorie à valider':l.category} · {l.images?.length||0} photo(s)</div>
 <SellerProfileCard key={l.seller_id} sellerId={l.seller_id} profile={profileOf(l.seller_id)} sb={sb}/>
 {l.has_issue?<div className="campus-review-defect"><strong>Défaut déclaré par le vendeur</strong><p>{l.issue_details}</p></div>:<p className="campus-review-no-defect">Aucun défaut déclaré par le vendeur.</p>}
 {l.category_proposal&&l.status==='pending'&&<div className="campus-category-review">
