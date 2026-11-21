@@ -14,3 +14,5 @@
 .campus-promo-crop-tools input[type=range]{flex:1;min-width:90px;accent-color:#6037e5}
 .campus-promo-crop-reset{background:#f1ebff;color:#5935ec;border:1px solid #d9cafc;border-radius:10px;padding:9px 11px;font-size:12px;font-weight:800;cursor:pointer}
 .campus-promo-crop-reset:focus-visible{outline:3px solid #9d7af8;outline-offset:2px}
+
+.campus-promo-crop-error{position:absolute;inset:0;display:grid;place-items:center;padding:16px;color:#fff;text-align:center;font-size:13px;font-weight:750;background:#4d1a7a}

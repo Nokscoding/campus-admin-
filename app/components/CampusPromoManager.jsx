@@ -8,7 +8,7 @@ function localDate(value){if(!value)return '';const d=new Date(value);if(Number.
 function safeUrl(value){const s=String(value||'').trim();if(!s)return true;if(s.startsWith('/')&&!s.startsWith('//'))return true;try{const u=new URL(s);return ['https:','http:'].includes(u.protocol)}catch{return false}}
 const labels=['Sponsorisé','Publicité','Annonce','Partenaire','À la une'];
 export default function CampusPromoManager({sb}){
- const [items,setItems]=useState([]),[form,setForm]=useState({...empty}),[editing,setEditing]=useState(null),[file,setFile]=useState(null),[fileKey,setFileKey]=useState(0),[crop,setCrop]=useState({...DEFAULT_CROP}),[working,setWorking]=useState(false),[loading,setLoading]=useState(true),[message,setMessage]=useState('');
+ const [items,setItems]=useState([]),[form,setForm]=useState({...empty}),[editing,setEditing]=useState(null),[file,setFile]=useState(null),[fileKey,setFileKey]=useState(0),[crop,setCrop]=useState({...DEFAULT_CROP}),[imageReady,setImageReady]=useState(false),[imageError,setImageError]=useState(''),[working,setWorking]=useState(false),[loading,setLoading]=useState(true),[message,setMessage]=useState('');
  async function load(){
   if(!sb)return;setLoading(true);
   const {data,error}=await sb.from('campus_promotions').select('*').order('sort_order',{ascending:true}).order('created_at',{ascending:false}).limit(120);
@@ -18,16 +18,17 @@ export default function CampusPromoManager({sb}){
  }
  useEffect(()=>{load()},[sb]);
  const set=(field,value)=>setForm(v=>({...v,[field]:value}));
- function reset(){setEditing(null);setForm({...empty});setFile(null);setCrop({...DEFAULT_CROP});setFileKey(k=>k+1)}
+ function reset(){setEditing(null);setForm({...empty});setFile(null);setCrop({...DEFAULT_CROP});setImageReady(false);setImageError('');setFileKey(k=>k+1)}
  function edit(item){
   setEditing(item);
   setForm({title:item.title||'',subtitle:item.subtitle||'',badge:item.badge||'Annonce',button_text:item.button_text||'',button_url:item.button_url||'',sort_order:item.sort_order||0,active:item.active,starts_at:localDate(item.starts_at),ends_at:localDate(item.ends_at)});
-  setFile(null);setCrop({...DEFAULT_CROP});setFileKey(k=>k+1);setMessage('');
+  setFile(null);setCrop({...DEFAULT_CROP});setImageReady(false);setImageError('');setFileKey(k=>k+1);setMessage('');
   document.querySelector('#campus-promo-editor')?.scrollIntoView({behavior:'smooth',block:'start'});
  }
  async function save(e){
   e.preventDefault();if(working)return;
   if(!editing&&!file){setMessage('Choisis une image avant de publier.');return}
+  if(file&&(!imageReady||imageError)){setMessage(imageError||'L’image n’est pas encore prête.');return}
   if(!safeUrl(form.button_url)){setMessage('Lien invalide : utilise une adresse https:// ou un chemin interne commençant par /.');return}
   if(form.button_url.trim()&&!form.button_text.trim()){setMessage('Ajoute le texte du bouton ou enlève son lien.');return}
   if(form.starts_at&&form.ends_at&&new Date(form.ends_at)<=new Date(form.starts_at)){setMessage('La date de fin doit être postérieure à la date de début.');return}
@@ -40,7 +41,7 @@ export default function CampusPromoManager({sb}){
     setMessage('Préparation du recadrage au format 1536 × 1024…');
     const prepared=await prepareCampusPromoImage(file,crop);
     if(prepared.size>7*1024*1024)throw Error('Image recadrée trop lourde (7 Mo maximum).');
-    uploadedPath='promotions/'+crypto.randomUUID()+'.webp';
+    uploadedPath='promotions/'+crypto.randomUUID()+(prepared.type==='image/webp'?'.webp':'.jpg');
     const {error:uploadError}=await sb.storage.from('campus-promo-images').upload(uploadedPath,prepared,{contentType:prepared.type,cacheControl:'3600',upsert:false});
     if(uploadError)throw uploadError;
     imagePath=uploadedPath;
@@ -81,10 +82,11 @@ export default function CampusPromoManager({sb}){
    <form className="panel campus-promos-editor" id="campus-promo-editor" onSubmit={save}>
     <div className="campus-promos-editor-head"><h2>{editing?'Modifier la publicité':'Ajouter une publicité'}</h2>{editing&&<button type="button" className="soft-button" onClick={reset}>Annuler</button>}</div>
     <label className="campus-promo-field">Image {editing?'(facultatif pour conserver la précédente)':'(obligatoire)'}
-     <input key={fileKey} type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>{setFile(e.target.files?.[0]||null);setCrop({...DEFAULT_CROP});}} required={!editing}/>
+     <input key={fileKey} type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>{setFile(e.target.files?.[0]||null);setCrop({...DEFAULT_CROP});setImageReady(false);setImageError('');setMessage('');}} required={!editing}/>
     </label>
+    {imageError&&<p className="campus-promos-message" role="alert">{imageError}</p>}
     <p className="campus-promos-help">Format final automatique : <strong>1536 × 1024 px (3:2)</strong>. Importation JPG, PNG ou WebP (7 Mo maximum). L’image entière est visible par défaut ; pince pour zoomer et glisse pour recadrer avant de publier.</p>
-    {file?<CampusPromoCropEditor file={file} crop={crop} onChange={setCrop} badge={form.badge}/>:editing?.image_url&&<div className="campus-promo-preview"><img src={editing.image_url} alt="Visuel actuel"/><span>{form.badge}</span></div>}
+    {file?<CampusPromoCropEditor file={file} crop={crop} onChange={setCrop} badge={form.badge} onReadyChange={setImageReady} onErrorChange={setImageError}/>:editing?.image_url&&<div className="campus-promo-preview"><img src={editing.image_url} alt="Visuel actuel"/><span>{form.badge}</span></div>}
     <label className="campus-promo-field">Titre court<input maxLength={100} value={form.title} onChange={e=>set('title',e.target.value)} placeholder="La rentrée à petit prix"/></label>
     <label className="campus-promo-field">Petit texte de présentation<input maxLength={180} value={form.subtitle} onChange={e=>set('subtitle',e.target.value)} placeholder="Découvre les offres de nos partenaires"/></label>
     <div className="campus-promos-two">
@@ -101,7 +103,7 @@ export default function CampusPromoManager({sb}){
      <label className="campus-promo-field">Fin (facultatif)<input type="datetime-local" value={form.ends_at} onChange={e=>set('ends_at',e.target.value)}/></label>
     </div>
     <label className="campus-promos-checkbox"><input type="checkbox" checked={form.active} onChange={e=>set('active',e.target.checked)}/> Afficher cette publicité sur le site</label>
-    <button className="button campus-promos-save" type="submit" disabled={working}>{working?'Enregistrement…':editing?'Enregistrer les modifications':'Ajouter au carrousel'}</button>
+    <button className="button campus-promos-save" type="submit" disabled={working||(Boolean(file)&&!imageReady)}>{working?'Enregistrement…':file&&!imageReady?'Lecture de l’image…':editing?'Enregistrer les modifications':'Ajouter au carrousel'}</button>
    </form>
    <div className="panel campus-promos-list"><div className="campus-promos-editor-head"><h2>Diapositives ({items.length})</h2><span>Ordre croissant</span></div>
     {loading?<p>Chargement…</p>:!items.length?<p className="campus-promos-empty">Aucune publicité enregistrée. L'illustration CAMPUS habituelle reste visible sur le site.</p>:items.map(item=><article className="campus-promos-row" key={item.id}>
