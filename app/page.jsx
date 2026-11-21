@@ -266,9 +266,9 @@ export default function ERP(){
 <SellerProfileCard key={l.seller_id} sellerId={l.seller_id} profile={profileOf(l.seller_id)} sb={sb}/>
 {l.has_issue?<div className="campus-review-defect"><strong>Défaut déclaré par le vendeur</strong><p>{l.issue_details}</p></div>:<p className="campus-review-no-defect">Aucun défaut déclaré par le vendeur.</p>}
 {l.category_proposal&&l.status==='pending'&&<div className="campus-category-review">
- <strong>Nouvelle catégorie proposée : « {l.category_proposal} »</strong>
- <p>Choisis de l'ajouter au catalogue ou de classer l'annonce dans une catégorie existante.</p>
- <button className="button" type="button" disabled={busy||!l.images?.length} onClick={()=>perform('campus_review_listing',{p_id:l.id,p_approve:true,p_category_decision:'accept'},null,'Catégorie acceptée et annonce approuvée. Le vendeur a reçu une notification CAMPUS.')}>Accepter la catégorie et approuver</button>
+ <div className="campus-category-proposal-heading"><span className="campus-category-proposal-label">Catégorie proposée par le vendeur</span><strong>« {l.category_proposal} »</strong></div>
+ <p>En validant cette catégorie, elle sera ajoutée au catalogue CAMPUS (si elle n'existe pas encore), et cette annonce sera publiée directement dedans.</p>
+ <button className="campus-category-approve-button" type="button" disabled={busy||!l.images?.length} onClick={()=>perform('campus_review_listing',{p_id:l.id,p_approve:true,p_category_decision:'accept'},null,'Catégorie validée et ajoutée à CAMPUS. Annonce publiée dans cette catégorie.')}>Valider la catégorie</button>
  <label htmlFor={'fallback-'+l.id}>Ou reclasser cette annonce</label>
  <select id={'fallback-'+l.id} value={fallbackByListing[l.id]||''} onChange={e=>setFallbackByListing(current=>({...current,[l.id]:e.target.value}))}><option value="">Choisir une catégorie existante</option>{categories.map(cat=><option key={cat.slug} value={cat.name}>{cat.name}</option>)}</select>
  <button type="button" className="soft-button" disabled={busy||!l.images?.length||!fallbackByListing[l.id]} onClick={()=>perform('campus_review_listing',{p_id:l.id,p_approve:true,p_category_decision:'fallback',p_fallback_category:fallbackByListing[l.id]},null,'Annonce reclassée et approuvée. La nouvelle catégorie n’a pas été créée.')}>Reclasser et approuver</button>
