@@ -1,0 +1,16 @@
+.campus-promo-crop-editor{margin:0 0 18px;min-width:0}
+.campus-promo-crop-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 9px;font-size:13px;color:#302049}
+.campus-promo-crop-heading span{font-weight:650;color:#7a6b91;font-size:11px}
+.campus-promo-crop-stage{width:100%;aspect-ratio:3/2;position:relative;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;border-radius:15px;background:#401976;cursor:grab;overscroll-behavior:contain;border:1px solid #d3c6e8;isolation:isolate}
+.campus-promo-crop-stage:active{cursor:grabbing}
+.campus-promo-crop-backdrop{position:absolute;inset:-12%;width:124%;height:124%;object-fit:cover;filter:blur(18px) brightness(.8);pointer-events:none}
+.campus-promo-crop-image{position:absolute;max-width:none;max-height:none;display:block;pointer-events:none;transform-origin:center center}
+.campus-promo-crop-wait{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px}
+.campus-promo-crop-badge{position:absolute;bottom:12px;left:12px;padding:5px 10px;background:#211347bf;color:#fff;border-radius:30px;font-size:10px;font-weight:800;text-transform:uppercase;pointer-events:none}
+.campus-promo-crop-hint{font-size:12px;color:#796b91;line-height:1.55;margin:10px 0}
+.campus-promo-crop-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.campus-promo-crop-tools label{display:flex;justify-content:space-between;gap:7px;min-width:88px;color:#382d58;font-size:12px;font-weight:800}
+.campus-promo-crop-tools label span{color:#75668c;font-weight:700}
+.campus-promo-crop-tools input[type=range]{flex:1;min-width:90px;accent-color:#6037e5}
+.campus-promo-crop-reset{background:#f1ebff;color:#5935ec;border:1px solid #d9cafc;border-radius:10px;padding:9px 11px;font-size:12px;font-weight:800;cursor:pointer}
+.campus-promo-crop-reset:focus-visible{outline:3px solid #9d7af8;outline-offset:2px}

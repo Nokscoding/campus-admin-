@@ -1,14 +1,14 @@
 'use client';
 import {useEffect,useState} from 'react';
 import './CampusPromoManager.css';
+import CampusPromoCropEditor,{prepareCampusPromoImage,DEFAULT_CROP} from './CampusPromoCropEditor';
 
 const empty={title:'',subtitle:'',badge:'Sponsorisé',button_text:'Découvrir',button_url:'',sort_order:0,active:true,starts_at:'',ends_at:''};
 function localDate(value){if(!value)return '';const d=new Date(value);if(Number.isNaN(d.getTime()))return '';const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())}
 function safeUrl(value){const s=String(value||'').trim();if(!s)return true;if(s.startsWith('/')&&!s.startsWith('//'))return true;try{const u=new URL(s);return ['https:','http:'].includes(u.protocol)}catch{return false}}
 const labels=['Sponsorisé','Publicité','Annonce','Partenaire','À la une'];
 export default function CampusPromoManager({sb}){
- const [items,setItems]=useState([]),[form,setForm]=useState({...empty}),[editing,setEditing]=useState(null),[file,setFile]=useState(null),[preview,setPreview]=useState(''),[fileKey,setFileKey]=useState(0),[working,setWorking]=useState(false),[loading,setLoading]=useState(true),[message,setMessage]=useState('');
- useEffect(()=>{if(!file){setPreview('');return}const u=URL.createObjectURL(file);setPreview(u);return()=>URL.revokeObjectURL(u)},[file]);
+ const [items,setItems]=useState([]),[form,setForm]=useState({...empty}),[editing,setEditing]=useState(null),[file,setFile]=useState(null),[fileKey,setFileKey]=useState(0),[crop,setCrop]=useState({...DEFAULT_CROP}),[working,setWorking]=useState(false),[loading,setLoading]=useState(true),[message,setMessage]=useState('');
  async function load(){
   if(!sb)return;setLoading(true);
   const {data,error}=await sb.from('campus_promotions').select('*').order('sort_order',{ascending:true}).order('created_at',{ascending:false}).limit(120);
@@ -18,11 +18,11 @@ export default function CampusPromoManager({sb}){
  }
  useEffect(()=>{load()},[sb]);
  const set=(field,value)=>setForm(v=>({...v,[field]:value}));
- function reset(){setEditing(null);setForm({...empty});setFile(null);setFileKey(k=>k+1)}
+ function reset(){setEditing(null);setForm({...empty});setFile(null);setCrop({...DEFAULT_CROP});setFileKey(k=>k+1)}
  function edit(item){
   setEditing(item);
   setForm({title:item.title||'',subtitle:item.subtitle||'',badge:item.badge||'Annonce',button_text:item.button_text||'',button_url:item.button_url||'',sort_order:item.sort_order||0,active:item.active,starts_at:localDate(item.starts_at),ends_at:localDate(item.ends_at)});
-  setFile(null);setFileKey(k=>k+1);setMessage('');
+  setFile(null);setCrop({...DEFAULT_CROP});setFileKey(k=>k+1);setMessage('');
   document.querySelector('#campus-promo-editor')?.scrollIntoView({behavior:'smooth',block:'start'});
  }
  async function save(e){
@@ -37,9 +37,11 @@ export default function CampusPromoManager({sb}){
   try{
    let imageUrl=editing?.image_url||'',imagePath=editing?.image_path||null;
    if(file){
-    const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
-    uploadedPath='promotions/'+crypto.randomUUID()+'.'+ext;
-    const {error:uploadError}=await sb.storage.from('campus-promo-images').upload(uploadedPath,file,{contentType:file.type,cacheControl:'3600',upsert:false});
+    setMessage('Préparation du recadrage au format 1536 × 1024…');
+    const prepared=await prepareCampusPromoImage(file,crop);
+    if(prepared.size>7*1024*1024)throw Error('Image recadrée trop lourde (7 Mo maximum).');
+    uploadedPath='promotions/'+crypto.randomUUID()+'.webp';
+    const {error:uploadError}=await sb.storage.from('campus-promo-images').upload(uploadedPath,prepared,{contentType:prepared.type,cacheControl:'3600',upsert:false});
     if(uploadError)throw uploadError;
     imagePath=uploadedPath;
     imageUrl=sb.storage.from('campus-promo-images').getPublicUrl(uploadedPath).data.publicUrl;
@@ -79,10 +81,10 @@ export default function CampusPromoManager({sb}){
    <form className="panel campus-promos-editor" id="campus-promo-editor" onSubmit={save}>
     <div className="campus-promos-editor-head"><h2>{editing?'Modifier la publicité':'Ajouter une publicité'}</h2>{editing&&<button type="button" className="soft-button" onClick={reset}>Annuler</button>}</div>
     <label className="campus-promo-field">Image {editing?'(facultatif pour conserver la précédente)':'(obligatoire)'}
-     <input key={fileKey} type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>setFile(e.target.files?.[0]||null)} required={!editing}/>
+     <input key={fileKey} type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>{setFile(e.target.files?.[0]||null);setCrop({...DEFAULT_CROP});}} required={!editing}/>
     </label>
-    <p className="campus-promos-help">Conseillé : image paysage 1536 × 1024 px (ratio 3:2). JPG, PNG ou WebP, 7 Mo maximum. Le site adapte l'image aux mobiles.</p>
-    {(preview||editing?.image_url)&&<div className="campus-promo-preview"><img src={preview||editing.image_url} alt="Aperçu du visuel publicitaire"/><span>{form.badge}</span></div>}
+    <p className="campus-promos-help">Format final automatique : <strong>1536 × 1024 px (3:2)</strong>. Importation JPG, PNG ou WebP (7 Mo maximum). L’image entière est visible par défaut ; pince pour zoomer et glisse pour recadrer avant de publier.</p>
+    {file?<CampusPromoCropEditor file={file} crop={crop} onChange={setCrop} badge={form.badge}/>:editing?.image_url&&<div className="campus-promo-preview"><img src={editing.image_url} alt="Visuel actuel"/><span>{form.badge}</span></div>}
     <label className="campus-promo-field">Titre court<input maxLength={100} value={form.title} onChange={e=>set('title',e.target.value)} placeholder="La rentrée à petit prix"/></label>
     <label className="campus-promo-field">Petit texte de présentation<input maxLength={180} value={form.subtitle} onChange={e=>set('subtitle',e.target.value)} placeholder="Découvre les offres de nos partenaires"/></label>
     <div className="campus-promos-two">
