@@ -147,3 +147,13 @@
 .campus-erp-avatar-dialog p{color:#776c8b;font-size:13px;margin:0}
 .campus-erp-avatar-done{margin-top:24px;border:0;border-radius:11px;background:#5b3ad5;color:white;padding:13px 22px;width:100%;font:800 13px Outfit,Arial,sans-serif;cursor:pointer}
 @media(max-width:650px){.campus-erp-avatar-dialog{padding:34px 18px 20px}.campus-erp-avatar-dialog .campus-seller-avatar.large{width:min(245px,70vw)}}
+
+/* Validation de catégorie proposée — DA violette CAMPUS */
+.campus-category-proposal-heading{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin-bottom:8px}
+.campus-category-proposal-heading strong{color:#3f228e;font-size:14px;overflow-wrap:anywhere}
+.campus-category-proposal-label{display:inline-flex;align-items:center;padding:5px 8px;border-radius:7px;background:#eae0ff;color:#5433af;font-size:10px;font-weight:800;line-height:1.35}
+.campus-category-approve-button{display:inline-flex;justify-content:center;align-items:center;padding:10px 16px;min-height:42px;border:1px solid #5b3bd8;border-radius:10px;background:#5b3bd8;color:#fff;font:800 12px Outfit,Arial,sans-serif;cursor:pointer;box-shadow:0 3px 9px #5b3bd824;transition:background .15s ease,transform .15s ease,box-shadow .15s ease}
+.campus-category-approve-button:hover:not(:disabled){background:#4827bf;box-shadow:0 5px 13px #5b3bd831;transform:translateY(-1px)}
+.campus-category-approve-button:focus-visible{outline:3px solid #ad96ff;outline-offset:2px}
+.campus-category-approve-button:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+@media(max-width:650px){.campus-category-approve-button{width:100%}}
