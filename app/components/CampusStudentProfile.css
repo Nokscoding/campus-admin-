@@ -1,0 +1,65 @@
+
+.campus-student-page{display:grid;gap:22px;max-width:1250px;padding:0 0 36px;color:#211b36}
+.campus-student-topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.campus-student-back,.campus-student-refresh{border:1px solid #ded8ea;border-radius:12px;background:#fff;color:#4b368a;font-weight:700;padding:11px 16px;cursor:pointer;font-size:13px}
+.campus-student-back:hover,.campus-student-refresh:hover{background:#f4f1ff}
+.campus-student-refresh:disabled{opacity:.55;cursor:default}
+.campus-student-identity{display:flex;align-items:center;gap:20px;padding:28px;border-radius:21px;border:1px solid #e8e4f0;background:#fff;box-shadow:0 6px 30px rgba(28,16,68,.04)}
+.campus-student-avatar{flex-shrink:0;width:104px;height:104px;border-radius:50%;background:#3d257a;color:#fff;display:grid;place-items:center;font-weight:800;font-size:43px;box-shadow:0 0 0 5px #f0eafe}
+.campus-student-identity-info{min-width:0}
+.campus-student-overline{color:#6949bd;font-size:11px;font-weight:800;letter-spacing:.09em}
+.campus-student-identity h1{font-size:clamp(22px,3vw,32px);line-height:1.17;letter-spacing:-.035em;margin:9px 0 7px;color:#211b36;overflow-wrap:anywhere}
+.campus-student-identity-info>p{margin:0 0 14px;color:#6d647c;font-size:15px}
+.campus-student-details{display:flex;flex-wrap:wrap;gap:8px 14px;color:#685f78;font-size:12px}
+.campus-student-details a{color:#4d33a5;text-decoration:underline}
+.campus-student-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}
+.campus-student-kpi{border:1px solid #e8e5ef;border-radius:15px;background:#fff;min-height:106px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.campus-student-kpi>span{color:#716a80;font-size:12px;line-height:1.5}
+.campus-student-kpi>strong{font-size:27px;line-height:1;color:#301b69;font-variant-numeric:tabular-nums}
+.campus-student-section-title h2{font-size:22px;letter-spacing:-.025em;margin:0 0 6px;color:#211b36}
+.campus-student-section-title p{color:#777080;font-size:13px;margin:0;line-height:1.5}
+.campus-student-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.campus-student-tabs button{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #e5e0ed;color:#5d526f;border-radius:11px;padding:10px 12px;font-size:12px;font-weight:750;cursor:pointer}
+.campus-student-tabs button span{background:#f0edf8;border-radius:8px;padding:3px 6px;font-size:11px}
+.campus-student-tabs button.active{background:#5131ae;color:#fff;border-color:#5131ae}
+.campus-student-tabs button.active span{background:#765ac1;color:#fff}
+.campus-student-search{display:grid;gap:8px;color:#625771;font-size:12px;font-weight:700;max-width:450px}
+.campus-student-search input{font:inherit;font-size:14px;background:#fff;border:1px solid #dad4e9;padding:13px;border-radius:12px;outline-offset:3px;width:100%}
+.campus-student-empty,.campus-student-error,.campus-student-warning{border-radius:14px;padding:22px;background:#fff;border:1px solid #e9e5f1;color:#6b617b;font-size:14px}
+.campus-student-error{display:flex;justify-content:space-between;gap:10px;color:#a13345}
+.campus-student-error button{border:1px solid #d6a1a9;background:#fff;border-radius:8px;padding:6px 9px;cursor:pointer}
+.campus-student-warning{background:#fffaf0;border-color:#e7d7b6}
+.campus-student-list{display:grid;gap:12px}
+.campus-student-listing{display:flex;gap:16px;background:#fff;border:1px solid #e7e2ee;border-radius:16px;padding:15px;box-shadow:0 3px 15px rgba(29,20,53,.025)}
+.campus-student-cover{width:118px;height:126px;min-width:118px;border-radius:11px;overflow:hidden;display:grid;place-items:center;background:#f3f0f8;color:#9d94ac;text-align:center;font-size:12px}
+.campus-student-cover img{width:100%;height:100%;object-fit:cover}
+.campus-student-listing-main{flex:1;min-width:0}
+.campus-student-labelrow{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.campus-student-status,.campus-student-origin{display:inline-flex;align-items:center;border-radius:7px;padding:5px 9px;font-weight:750;font-size:11px;line-height:1.2}
+.campus-student-status-pending{background:#fff4dc;color:#8b5b0c}
+.campus-student-status-published{background:#eaf7ee;color:#28784b}
+.campus-student-status-sold{background:#e5f4eb;color:#17693a}
+.campus-student-status-ongoing{background:#e9eeff;color:#3752a0}
+.campus-student-status-removed{background:#f4e7e9;color:#903c48}
+.campus-student-status-other{background:#f0edf4;color:#6e5d80}
+.campus-student-origin-seller{background:#eef0ff;color:#5a4c9c}
+.campus-student-origin-staff{background:#fff0e5;color:#98510b}
+.campus-student-origin-unknown{background:#f2f2f2;color:#67646e}
+.campus-student-listing h3{font-size:16px;line-height:1.35;margin:9px 0 5px;color:#251b3d}
+.campus-student-listing-sub{font-size:12px;color:#746d81;margin:0;line-height:1.65}
+.campus-student-removal{margin:11px 0 0;padding:11px 13px;display:flex;gap:5px;flex-direction:column;border-radius:10px;background:#faf7f7;color:#734c56;font-size:12px;border-left:3px solid #be8692}
+.campus-student-removal p{margin:2px 0 0;white-space:pre-line;overflow-wrap:anywhere}
+.campus-student-removal span{color:#756b75}
+.campus-student-sold{color:#36734c;font-size:12px;margin:9px 0}
+.campus-student-listing-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:14px}
+.campus-student-listing-actions button,.campus-student-listing-actions a{border:1px solid #e3dbf1;border-radius:9px;padding:8px 10px;background:#fff;color:#59399e;font-size:12px;font-weight:650;cursor:pointer;text-decoration:none}
+.campus-student-listing-actions button:hover,.campus-student-listing-actions a:hover{background:#f4f0fc}
+.campus-student-history{margin-top:15px;padding:15px;background:#f9f7fc;border-radius:12px}
+.campus-student-history h4{font-size:13px;margin:0 0 10px}
+.campus-student-history ul{list-style:none;display:grid;gap:0;margin:0;padding:0}
+.campus-student-history li{display:flex;flex-direction:column;gap:3px;border-left:2px solid #d4c8ee;padding:5px 0 10px 15px;margin-left:3px;font-size:12px}
+.campus-student-history li>strong{color:#33225e}
+.campus-student-history li>span{color:#797086}
+.campus-student-history li p{color:#594c6f;margin:3px 0;white-space:pre-line;overflow-wrap:anywhere}
+@media(max-width:1050px){.campus-student-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:680px){.campus-student-page{gap:15px}.campus-student-identity{padding:17px;gap:13px;align-items:flex-start}.campus-student-avatar{width:68px;height:68px;font-size:29px;box-shadow:0 0 0 3px #f0eafe}.campus-student-identity h1{font-size:22px}.campus-student-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.campus-student-kpi{min-height:87px;padding:13px}.campus-student-kpi>strong{font-size:23px}.campus-student-tabs{flex-wrap:nowrap;overflow:auto;scrollbar-width:none;padding-bottom:3px}.campus-student-tabs button{white-space:nowrap;flex-shrink:0}.campus-student-listing{gap:11px;padding:11px}.campus-student-cover{width:76px;min-width:76px;height:88px}.campus-student-listing h3{font-size:14px}.campus-student-removal{padding:10px}.campus-student-listing-actions{gap:6px}}
