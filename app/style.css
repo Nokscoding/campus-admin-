@@ -157,3 +157,12 @@
 .campus-category-approve-button:focus-visible{outline:3px solid #ad96ff;outline-offset:2px}
 .campus-category-approve-button:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
 @media(max-width:650px){.campus-category-approve-button{width:100%}}
+
+
+/* Profils étudiants : accès à la fiche détaillée depuis les listes ERP. */
+.campus-seller-name-link{appearance:none;background:transparent;border:0;color:inherit;font:inherit;font-weight:800;text-align:left;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px}
+.campus-seller-name-link:hover,.campus-seller-name-link:focus-visible{color:#5533b3;text-decoration-color:currentColor}
+.campus-profile-inline-link{appearance:none;padding:0;background:transparent;border:0;color:#5334a6;font:inherit;font-weight:750;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.campus-profile-inline-link:hover{color:#28105e}
+.campus-profile-directory-search{display:grid;gap:7px;max-width:420px;margin:0 0 18px;font-size:13px;font-weight:700;color:#625773}
+.campus-profile-directory-search input{width:100%;font:inherit;font-weight:400;font-size:14px;border:1px solid #e0d9ed;border-radius:12px;padding:12px 14px;background:#fff;color:#2e2443}
