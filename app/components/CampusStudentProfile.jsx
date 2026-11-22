@@ -21,7 +21,7 @@ const auditActions={
  revised:'Annonce corrigée',hidden:'Annonce masquée',
  correction_requested:'Correction demandée',restored:'Remise en validation',
  deleted:'Annonce supprimée',archived:'Annonce retirée',
- moderator_message:'Message de modération',submitted:'Annonce soumise'
+ moderator_message:'Message de modération',submitted:'Annonce soumise',revision_submitted:'Modifications proposées',revision_approved:'Modifications approuvées',revision_rejected:'Modifications refusées'
 };
 function ProfileAvatar({profile,sb}){
  const choice=profile?.avatar_choice||'';
@@ -56,6 +56,7 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
  const [profile,setProfile]=useState(initialProfile||null);
  const [listings,setListings]=useState([]);
  const [audits,setAudits]=useState([]);
+ const [listingRevisions,setListingRevisions]=useState([]);
  const [orders,setOrders]=useState([]);
  const [loading,setLoading]=useState(true);
  const [error,setError]=useState('');
@@ -99,10 +100,11 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
     relatedAudits.push(...(auditResult.data||[]));
     relatedOrders.push(...(orderResult.data||[]));
    }
-   const {data:profileData,error:profileError}=await profileQuery;
+   const [{data:profileData,error:profileError},{data:revData,error:revError}]=await Promise.all([profileQuery,sb.from('campus_listing_revisions').select('listing_id,status,rejection_reason,submitted_at').eq('seller_id',studentId).limit(1000)]);
    if(profileError)throw profileError;
+   if(revError)throw revError;
    setProfile(profileData||initialProfile||null);
-   setListings(all);setAudits(relatedAudits);setOrders(relatedOrders);
+   setListings(all);setAudits(relatedAudits);setOrders(relatedOrders);setListingRevisions(revData||[]);
    setTruncated(maxed);
   }catch(e){setError(e.message||'Impossible de charger le profil et son historique.')}
   finally{setLoading(false);}
@@ -124,11 +126,12 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
   const logs=auditsByListing.get(l.id)||[];
   const orders=ordersByListing.get(l.id)||[];
   const completed=orders.filter(o=>o.status==='completed');
+  const revision=listingRevisions.find(r=>r.listing_id===l.id)||null;
   const sold=l.status==='sold'||completed.length>0;
   const removed=deletionLabel(l,logs,studentId,staffIds);
   const group=removed?'removed':sold?'sold':l.status==='pending'?'pending':l.status==='published'?'published':l.status==='reserved'?'ongoing':'other';
-  return {...l,logs,orders,completed,sold,removed,group};
- }),[listings,auditsByListing,ordersByListing,studentId,staffIds]);
+  return {...l,logs,orders,completed,sold,removed,group,revision};
+ }),[listings,auditsByListing,ordersByListing,studentId,staffIds,listingRevisions]);
  const totals=useMemo(()=>({
   all:enriched.length,
   pending:enriched.filter(l=>l.group==='pending').length,
@@ -190,9 +193,9 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
      <div className="campus-student-listing-main">
       <div className="campus-student-labelrow">
        <span className={'campus-student-status campus-student-status-'+l.group}>{l.sold?'Vente effectuée':statusLabels[l.status]||l.status}</span>
-       {l.removed&&<span className={'campus-student-origin campus-student-origin-'+l.removed.kind}>{l.removed.label}</span>}
+       {l.removed&&<span className={'campus-student-origin campus-student-origin-'+l.removed.kind}>{l.removed.label}</span>}{l.status==='published'&&l.revision?.status==='pending'&&<span className="campus-student-origin campus-student-origin-seller">Modification en attente</span>}{l.status==='published'&&l.revision?.status==='rejected'&&<span className="campus-student-origin campus-student-origin-staff">Dernière modification refusée</span>}
       </div>
-      <h3>{l.title}</h3>
+      <h3>{l.title}</h3>{l.revision?.status==='rejected'&&l.revision.rejection_reason&&<p className="campus-student-listing-sub"><strong>Motif du refus :</strong> {l.revision.rejection_reason}</p>}
       <p className="campus-student-listing-sub">{l.category} · {money(l.price,l.currency)} · Déposée le {dateLabel(l.created_at)}</p>
       {l.removed&&<div className="campus-student-removal">
        <strong>{l.removed.label}</strong>
