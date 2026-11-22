@@ -1,0 +1,41 @@
+
+.campus-admin-edit-backdrop{position:fixed;inset:0;z-index:2000;background:rgba(20,12,36,.75);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px}
+.campus-admin-edit-modal{width:min(740px,100%);max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain;border-radius:21px;background:#fff;color:#261d3b;box-shadow:0 22px 90px rgba(12,7,30,.32)}
+.campus-admin-edit-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:24px 26px 18px;border-bottom:1px solid #ece7f3}
+.campus-admin-edit-head>div>span{font-size:11px;letter-spacing:.075em;color:#7250b7;font-weight:800}
+.campus-admin-edit-head h2{font-size:clamp(21px,3vw,28px);line-height:1.2;letter-spacing:-.03em;margin:8px 0;color:#25183c}
+.campus-admin-edit-head p{font-size:13px;margin:0;color:#746b82;overflow-wrap:anywhere}
+.campus-admin-edit-close{flex-shrink:0;width:35px;height:35px;border:1px solid #e1dbe9;border-radius:50%;background:#faf8fd;color:#483562;font-size:24px;line-height:1;cursor:pointer}
+.campus-admin-edit-form{display:grid;gap:16px;padding:22px 26px 25px}
+.campus-admin-edit-form>label,.campus-admin-edit-two>label{display:grid;gap:7px;color:#433856;font-size:13px;font-weight:760}
+.campus-admin-edit-form input:not([type="checkbox"]):not([type="file"]),.campus-admin-edit-form textarea,.campus-admin-edit-form select{width:100%;min-width:0;border:1px solid #ded7eb;border-radius:11px;background:#fff;padding:12px;font-family:inherit;font-size:14px;color:#302347;outline-offset:3px}
+.campus-admin-edit-form textarea{line-height:1.6;resize:vertical}
+.campus-admin-edit-two{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.campus-admin-edit-optional{font-weight:500;color:#817787}
+.campus-admin-edit-form .campus-admin-edit-check{display:flex;align-items:center;gap:10px}
+.campus-admin-edit-check input{width:17px;height:17px;accent-color:#6842d2}
+.campus-admin-edit-warning,.campus-admin-edit-error{font-size:13px;line-height:1.65;padding:13px 15px;border-radius:11px;background:#fff5e8;color:#865819;border:1px solid #f2d6ac}
+.campus-admin-edit-warning strong{display:block}
+.campus-admin-edit-warning p{margin:4px 0 0}
+.campus-admin-edit-error{background:#fff0f1;border-color:#efc2cc;color:#95384f}
+.campus-admin-edit-error button{border:0;background:transparent;color:inherit;text-decoration:underline;cursor:pointer;margin-left:8px}
+.campus-admin-edit-photos{display:grid;gap:11px}
+.campus-admin-edit-photos>strong{font-size:14px;color:#302247}
+.campus-admin-edit-photos>strong small{font-size:12px;color:#7f748c}
+.campus-admin-edit-photos>p{margin:0;color:#756b80;font-size:12px;line-height:1.5}
+.campus-admin-edit-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}
+.campus-admin-edit-photo{display:grid;gap:5px;padding:7px;background:#f8f6fc;border:1px solid #e8e4f1;border-radius:11px;min-width:0}
+.campus-admin-edit-photo>img{width:100%;aspect-ratio:1.1;object-fit:contain;border-radius:7px;background:#eeebf3}
+.campus-admin-edit-photo-controls{display:flex;justify-content:center;gap:5px}
+.campus-admin-edit-photo-controls button{border:1px solid #ded6e9;background:#fff;border-radius:7px;padding:5px 7px;color:#634c83;font-size:12px;cursor:pointer}
+.campus-admin-edit-photo-controls button:disabled{opacity:.4;cursor:default}
+.campus-admin-edit-upload{display:grid;gap:8px;color:#59477c;font-size:12px;font-weight:650}
+.campus-admin-edit-upload input{width:100%;max-width:100%;font-size:12px}
+.campus-admin-edit-notification{padding:13px 15px;background:#f4f1fc;border-left:3px solid #7856dc;color:#55476a;font-size:12px;line-height:1.7;margin:0;border-radius:9px}
+.campus-admin-edit-feedback{padding:12px;border-radius:10px;background:#f3f0fa;color:#543e82;font-size:13px}
+.campus-admin-edit-footer{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;padding-top:7px}
+.campus-admin-edit-footer button{font:inherit;font-size:13px;font-weight:800;border-radius:11px;border:1px solid #ded7eb;background:#fff;color:#59417f;padding:12px 17px;cursor:pointer}
+.campus-admin-edit-footer button.campus-admin-edit-save{background:#5931d8;color:#fff;border-color:#5931d8}
+.campus-admin-edit-footer button:disabled{opacity:.5;cursor:not-allowed}
+.campus-admin-edit-state{padding:36px;text-align:center;color:#726981;font-size:14px}
+@media(max-width:680px){.campus-admin-edit-backdrop{padding:7px}.campus-admin-edit-modal{max-height:calc(100dvh - 14px);border-radius:16px}.campus-admin-edit-head{padding:17px 16px 13px}.campus-admin-edit-form{padding:18px 16px 22px;gap:14px}.campus-admin-edit-two{grid-template-columns:1fr}.campus-admin-edit-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.campus-admin-edit-photo{padding:4px}.campus-admin-edit-footer{flex-direction:column-reverse}.campus-admin-edit-footer button{width:100%}}
