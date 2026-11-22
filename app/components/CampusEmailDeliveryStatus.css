@@ -1,0 +1,24 @@
+
+.campus-email-status{display:grid;gap:15px;padding:21px;border:1px solid #e3dcee;background:#fff;border-radius:16px;margin:0 0 18px;color:#302345}
+.campus-email-status-header{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.campus-email-status-overline{font-size:10px;font-weight:850;letter-spacing:.075em;color:#7055a5}
+.campus-email-status-header h2{margin:5px 0 5px;font-size:18px;color:#2e2147;letter-spacing:-.025em}
+.campus-email-status-header p{margin:0;font-size:12px;line-height:1.5;color:#726780}
+.campus-email-status-header button{padding:10px 13px;font:inherit;font-size:12px;font-weight:750;background:#f7f4fc;border:1px solid #dfd4ee;color:#60429d;border-radius:10px;cursor:pointer}
+.campus-email-status-header button:disabled{opacity:.5;cursor:default}
+.campus-email-status-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.campus-email-status-info>div{display:grid;gap:6px;padding:12px 13px;background:#f9f7fc;border:1px solid #eee9f5;border-radius:11px;min-width:0}
+.campus-email-status-info small{font-size:11px;color:#80758b}
+.campus-email-status-info strong{font-size:13px;color:#402a76;overflow-wrap:anywhere}
+.campus-email-status-list{display:grid;border-top:1px solid #eee8f5;padding-top:5px}
+.campus-email-status-entry{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #f0ecf5;padding:11px 0}
+.campus-email-status-entry>div{display:grid;gap:3px;min-width:0}
+.campus-email-status-entry strong{font-size:12px;color:#453b58;overflow-wrap:anywhere}
+.campus-email-status-entry small{font-size:11px;color:#897e94}
+.campus-email-status-pill{white-space:nowrap;font-size:11px;font-weight:780;padding:6px 9px;border-radius:8px;background:#f2f0f6;color:#71677e}
+.campus-email-status-pill-sent{background:#e9f5ec;color:#267849}
+.campus-email-status-pill-failed{background:#fff0e4;color:#a15e16}
+.campus-email-status-pill-sending{background:#edf0ff;color:#5a5db7}
+.campus-email-status-caption,.campus-email-status-empty,.campus-email-status-error{font-size:11px;line-height:1.65;color:#867a91;margin:0}
+.campus-email-status-error{color:#a5484c}
+@media(max-width:620px){.campus-email-status{padding:15px}.campus-email-status-info{grid-template-columns:1fr}.campus-email-status-entry{align-items:flex-start}.campus-email-status-pill{font-size:10px}}
