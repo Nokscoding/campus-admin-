@@ -11,6 +11,9 @@ const status={pending:'À modérer',published:'Publiée',draft:'Brouillon',hidde
 const roles={admin:'Administrateur',operations:'Responsable opérations',agent:'Agent agréé',finance:'Responsable caisse'};
 const curr=(n,c)=>Number(n||0).toLocaleString('fr-FR',{maximumFractionDigits:2})+' '+(c||'USD');
 
+const campusHasDirectContact=(value)=>/(\+?243(?:[\s().-]*[0-9]){9}|(?:^|[^0-9])0[89](?:[\s().-]*[0-9]){8}|wa\.me\/|api\.whatsapp\.com\/|chat\.whatsapp\.com\/|instagram\.com\/|t\.me\/)/i.test(String(value||''));
+
+
 function campusWhatsAppReminder(profile,listing,correction){
  const phone=String(profile?.phone||'').trim().replace(/[^0-9]/g,'');
  let digits=phone;
@@ -315,6 +318,13 @@ export default function ERP(){
  </section>
  </>}{sellerFilter&&<div className="campus-erp-seller-filter"><span>Annonces de <strong>{nameOf(sellerFilter)}</strong></span><button type="button" onClick={()=>setSellerFilter(null)}>Afficher toutes les annonces</button></div>}{!sellerListings.length?<div className="empty-panel">{tab==='review'?'Aucune annonce en attente de validation.':listingFiltersActive?'Aucune annonce ne correspond aux filtres choisis.':showDeleted?'Aucune annonce supprimée.':'Aucune annonce dans cette section.'}</div>:<div className="listing-grid">{sellerListings.map(l=><article className="listing-card" key={l.id}><div className="listing-cover">{l.images?.[0]?<img src={l.images[0]} alt={l.title}/>:<div className="placeholder-cover"><Icon name="package" size={46}/></div>}</div><div className="listing-body"><span className={'status-tag status-'+l.status}>{l.is_revision?'Modification à valider':status[l.status]||l.status}</span>{!l.is_revision&&revisions.some(r=>r.listing_id===l.id&&r.status==='pending')&&<span className="campus-revision-live-tag">Modifications en attente · annonce toujours en ligne</span>}<h3>{l.title}</h3><p className="muted">{l.description}</p><strong>{curr(l.price,l.currency)}</strong><div className="listing-meta">{l.category_proposal&&l.status==='pending'?'Catégorie à valider':l.category} · {l.images?.length||0} photo(s)</div>
 <SellerProfileCard key={l.seller_id} sellerId={l.seller_id} profile={profileOf(l.seller_id)} sb={sb} onOpenProfile={openStudentProfile}/>
+
+{!l.is_revision&&campusHasDirectContact(l.description)&&<div className="campus-contact-warning-erp" role="note">
+ <strong>Coordonnées personnelles ou lien externe détecté dans la description</strong>
+ <p>Ce contenu peut entraîner une transaction en dehors de CAMPUS. Demande au vendeur de retirer ses coordonnées avant de poursuivre la vente.</p>
+ <button type="button" onClick={()=>setModerationMessages(current=>({...current,[l.id]:"Votre annonce contient un numéro personnel ou un moyen de contact direct. Les transactions doivent passer par CAMPUS pour permettre l’inspection, la livraison sur le campus et le suivi du paiement. Veuillez retirer ces coordonnées de la description et soumettre les modifications à validation. Sans correction, l’annonce pourra être masquée."}))}>Préparer le message de correction</button>
+</div>}
+
 
 {!l.is_revision&&corrections.filter(r=>r.listing_id===l.id).slice(0,1).map(req=>{
  const href=campusWhatsAppReminder(profileOf(l.seller_id),l,req);
