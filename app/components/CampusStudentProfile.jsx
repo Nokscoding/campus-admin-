@@ -21,7 +21,7 @@ const auditActions={
  revised:'Annonce corrigée',hidden:'Annonce masquée',
  correction_requested:'Correction demandée',restored:'Remise en validation',
  deleted:'Annonce supprimée',archived:'Annonce retirée',
- moderator_message:'Message de modération',submitted:'Annonce soumise',revision_submitted:'Modifications proposées',revision_approved:'Modifications approuvées',revision_rejected:'Modifications refusées'
+ moderator_message:'Message de modération',submitted:'Annonce soumise',revision_submitted:'Modifications proposées',revision_approved:'Modifications approuvées',revision_rejected:'Modifications refusées',admin_edited:'Annonce modifiée par l’administration CAMPUS'
 };
 function ProfileAvatar({profile,sb}){
  const choice=profile?.avatar_choice||'';
@@ -52,7 +52,7 @@ function deletionLabel(listing,events,profileId,staffIds){
  }
  return {label,kind,reason:typeof e.details?.message==='string'?e.details.message:null,when:e.created_at};
 }
-export default function CampusStudentProfile({sb,studentId,initialProfile,onBack,onManageListing,staff=[]}){
+export default function CampusStudentProfile({sb,studentId,initialProfile,onBack,onManageListing,onEditListing,staff=[]}){
  const [profile,setProfile]=useState(initialProfile||null);
  const [listings,setListings]=useState([]);
  const [audits,setAudits]=useState([]);
@@ -208,6 +208,7 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
         {expanded[l.id]?'Masquer l’historique':'Voir l’historique'} ({l.logs.length})
        </button>
        {onManageListing&&<button type="button" onClick={()=>onManageListing(l)}>Gérer dans les annonces</button>}
+       {onEditListing&&['draft','pending','published','rejected','hidden'].includes(l.status)&&<button type="button" onClick={()=>onEditListing(l)}>Modifier l’annonce</button>}
        {l.status==='published'&&<a href={'https://campus-rdc.com/produit/'+encodeURIComponent(l.id)} target="_blank" rel="noopener noreferrer">Ouvrir l’annonce publique</a>}
       </div>
       {expanded[l.id]&&<div className="campus-student-history" aria-label={'Historique de '+l.title}>
@@ -216,6 +217,7 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
         <strong>{auditActions[a.action]||a.action}</strong>
         <span>{dateLabel(a.created_at)} · {a.actor_id===studentId&&['archived','updated','revised','submitted'].includes(a.action)?'Vendeur':staffIds.has(a.actor_id)?'Équipe CAMPUS':a.actor_id===studentId?'Compte du vendeur / équipe':'Auteur non identifié'}</span>
         {typeof a.details?.message==='string'&&a.details.message&&<p>Motif / message : {a.details.message}</p>}
+        {a.action==='admin_edited'&&<>{a.details?.changed_fields&&<p>Champs modifiés : {a.details.changed_fields}</p>}{a.details?.note&&<p>Message au vendeur : {a.details.note}</p>}</>}
        </li>)}</ul>:<p>Pas d'action historisée pour cette annonce.</p>}
       </div>}
      </div>
