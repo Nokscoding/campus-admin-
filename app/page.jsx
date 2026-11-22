@@ -10,6 +10,22 @@ const steps={assigned:['pickup_scheduled','Programmer le retrait'],pickup_schedu
 const status={pending:'À modérer',published:'Publiée',draft:'Brouillon',hidden:'Masquée',deleted:'Supprimée',rejected:'Refusée',reserved:'Réservée',sold:'Vendue',requested:'Nouvelle demande',awaiting_confirmation:'Accord acheteur requis',assigned:'Agent affecté',pickup_scheduled:'Retrait programmé',collected:'Récupéré',inspecting:'Inspection',approved:'Contrôlé',delivery:'Livraison sur le campus',paid:'Cash encaissé',completed:'Livraison confirmée',cancelled:'Annulée',disputed:'Litige'};
 const roles={admin:'Administrateur',operations:'Responsable opérations',agent:'Agent agréé',finance:'Responsable caisse'};
 const curr=(n,c)=>Number(n||0).toLocaleString('fr-FR',{maximumFractionDigits:2})+' '+(c||'USD');
+
+function campusWhatsAppReminder(profile,listing,correction){
+ const phone=String(profile?.phone||'').trim().replace(/[^0-9]/g,'');
+ let digits=phone;
+ if(/^0[0-9]{9}$/.test(digits))digits='243'+digits.slice(1);
+ if(!/^[1-9][0-9]{7,14}$/.test(digits))return null;
+ const name=profile?.display_name?.trim()||'';
+ const warning=correction.warning_about_masking?
+  'Si l’annonce reste non conforme, elle pourra être masquée par la modération.':'Merci de nous transmettre une version corrigée.';
+ const message='Bonjour'+(name?' '+name:'')+',\n\n'+'L’équipe de modération CAMPUS a relevé un problème dans votre annonce « '+listing.title+' ».\n\n'
+  +'Correction demandée : '+correction.message+'\n\n'
+  +'Merci de modifier l’annonce ici : https://www.campus-rdc.com/annonce/'+listing.id+'/modifier\n\n'
+  +warning+'\n\nMerci pour votre compréhension.\nL’équipe CAMPUS';
+ return 'https://wa.me/'+digits+'?text='+encodeURIComponent(message);
+}
+
 function Icon({name,size=19}){const p={grid:<><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></>,package:<><path d="m12 2 9 5-9 5-9-5 9-5ZM3 7v10l9 5 9-5V7M12 12v10"/></>,clipboard:<><rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 4V2h6v2M9 12l2 2 4-4M9 18h6"/></>,users:<><circle cx="9" cy="8" r="3"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M17 5a3 3 0 0 1 0 6m1 4a5 5 0 0 1 4 5"/></>,cash:<><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M5 8h2m10 8h2"/></>,refresh:<path d="M20 11a8 8 0 1 0-2 6M20 4v7h-7"/>,logout:<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m7 14 5-5-5-5m5 5H9"/>,shield:<><path d="m12 2 9 4v6c0 5-4 9-9 10-5-1-9-5-9-10V6zM8 12l3 3 5-6"/></>};return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{p[name]||p.grid}</svg>}
 
 function SellerAvatar({profile,sb,large=false}){
@@ -80,7 +96,7 @@ export default function ERP(){
  const [user,setUser]=useState(null),[role,setRole]=useState(null),[checking,setChecking]=useState(true),[busy,setBusy]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[toast,setToast]=useState(''),[tab,setTab]=useState('overview'),[bellOpen,setBellOpen]=useState(false),[permission,setPermission]=useState('unsupported');
  const bellRef=useRef(null);
  const [selectedStudentId,setSelectedStudentId]=useState(null),[profileReturnTab,setProfileReturnTab]=useState('sellers'),[profileSearch,setProfileSearch]=useState('');
- const [bugs,setBugs]=useState([]),[orders,setOrders]=useState([]),[categories,setCategories]=useState([]),[fallbackByListing,setFallbackByListing]=useState({}),[notifications,setNotifications]=useState([]),[listings,setListings]=useState([]),[agents,setAgents]=useState([]),[profiles,setProfiles]=useState([]),[sellerFilter,setSellerFilter]=useState(null),[showDeleted,setShowDeleted]=useState(false),[listingFilters,setListingFilters]=useState({search:'',status:'',university:'',category:'',currency:'',minPrice:'',maxPrice:'',sort:'newest'}),[moderationMessages,setModerationMessages]=useState({}),[revisions,setRevisions]=useState([]),[cash,setCash]=useState([]),[inspections,setInspections]=useState([]);
+ const [bugs,setBugs]=useState([]),[orders,setOrders]=useState([]),[categories,setCategories]=useState([]),[fallbackByListing,setFallbackByListing]=useState({}),[notifications,setNotifications]=useState([]),[listings,setListings]=useState([]),[agents,setAgents]=useState([]),[profiles,setProfiles]=useState([]),[sellerFilter,setSellerFilter]=useState(null),[showDeleted,setShowDeleted]=useState(false),[listingFilters,setListingFilters]=useState({search:'',status:'',university:'',category:'',currency:'',minPrice:'',maxPrice:'',sort:'newest'}),[moderationMessages,setModerationMessages]=useState({}),[revisions,setRevisions]=useState([]),[corrections,setCorrections]=useState([]),[cash,setCash]=useState([]),[inspections,setInspections]=useState([]);
  const [quoteId,setQuoteId]=useState(null),[deliveryFee,setDeliveryFee]=useState(''),[assignedAgent,setAssignedAgent]=useState(''),[quoteNote,setQuoteNote]=useState('');
  const [inspectionNotes,setInspectionNotes]=useState(''),[inspectionFiles,setInspectionFiles]=useState([]),[receipt,setReceipt]=useState(''),[staffEmail,setStaffEmail]=useState(''),[staffRole,setStaffRole]=useState('agent'),[staffActive,setStaffActive]=useState(true);
  async function refresh(account){
@@ -93,9 +109,9 @@ export default function ERP(){
    if(!staff?.active){setRole(null);return}
    setRole(staff.role);
    const calls=[sb.from('campus_orders').select('id,listing_id,buyer_id,agent_id,status,product_price,seller_fee,delivery_fee,currency,created_at,campus_listings(title,seller_id)').order('created_at',{ascending:false}).limit(200),sb.from('campus_listings').select('id,title,description,price,currency,category,category_proposal,has_issue,issue_details,status,images,seller_id,created_at').order('created_at',{ascending:false}).limit(200),sb.from('campus_staff').select('user_id,role,active').limit(200),sb.from('campus_profiles').select('user_id,display_name,phone,university,avatar_choice,avatar_path,avatar_updated_at,created_at').limit(300),sb.from('campus_cash_ledger').select('id,order_id,kind,amount,currency,receipt_number,recorded_by,created_at').order('created_at',{ascending:false}).limit(250),sb.from('campus_inspections').select('id,order_id,result,notes,photos,created_at,agent_id').order('created_at',{ascending:false}).limit(150)];
-   const [o,l,s,p,c,i,n,cat,bug,rev]=await Promise.all([...calls,sb.from('campus_notifications').select('id,kind,title,body,read_at,listing_id,created_at').order('created_at',{ascending:false}).limit(80),sb.from('campus_categories').select('name,slug').order('created_at',{ascending:true}).limit(100),sb.from('campus_bug_reports').select('id,user_id,subject,description,status,created_at').order('created_at',{ascending:false}).limit(100),['admin','operations'].includes(staff.role)?sb.from('campus_listing_revisions').select('id,listing_id,seller_id,title,description,price,condition,category,category_proposal,has_issue,issue_details,images,status,submitted_at').eq('status','pending').order('submitted_at',{ascending:false}).limit(300):Promise.resolve({data:[],error:null})]);
-   setOrders(o.data||[]);setListings(l.data||[]);setAgents(s.data||[]);setProfiles(p.data||[]);setCash(c.data||[]);setInspections(i.data||[]);setNotifications(n.data||[]);setCategories(cat.data||[]);setBugs(bug.data||[]);setRevisions(rev.data||[]);
-   const errors=[o.error,l.error,s.error,p.error,c.error,i.error,n.error,cat.error,bug.error,rev.error].filter(Boolean);if(errors.length)setToast('Certaines données sont limitées par ton rôle : '+errors[0].message);
+   const [o,l,s,p,c,i,n,cat,bug,rev,req]=await Promise.all([...calls,sb.from('campus_notifications').select('id,kind,title,body,read_at,listing_id,created_at').order('created_at',{ascending:false}).limit(80),sb.from('campus_categories').select('name,slug').order('created_at',{ascending:true}).limit(100),sb.from('campus_bug_reports').select('id,user_id,subject,description,status,created_at').order('created_at',{ascending:false}).limit(100),['admin','operations'].includes(staff.role)?sb.from('campus_listing_revisions').select('id,listing_id,seller_id,title,description,price,condition,category,category_proposal,has_issue,issue_details,images,status,submitted_at').eq('status','pending').order('submitted_at',{ascending:false}).limit(300):Promise.resolve({data:[],error:null}),['admin','operations'].includes(staff.role)?sb.from('campus_listing_correction_requests').select('id,listing_id,seller_id,message,status,warning_about_masking,created_at,seen_at,submitted_at,resolved_at,whatsapp_sent_at,whatsapp_sent_by').order('created_at',{ascending:false}).limit(400):Promise.resolve({data:[],error:null})]);
+   setOrders(o.data||[]);setListings(l.data||[]);setAgents(s.data||[]);setProfiles(p.data||[]);setCash(c.data||[]);setInspections(i.data||[]);setNotifications(n.data||[]);setCategories(cat.data||[]);setBugs(bug.data||[]);setRevisions(rev.data||[]);setCorrections(req.data||[]);
+   const errors=[o.error,l.error,s.error,p.error,c.error,i.error,n.error,cat.error,bug.error,rev.error,req.error].filter(Boolean);if(errors.length)setToast('Certaines données sont limitées par ton rôle : '+errors[0].message);
   }catch(e){setToast(e.message||'Impossible de charger le tableau de bord')}finally{setChecking(false)}
  }
  useEffect(()=>{if(!sb){setChecking(false);setToast('Supabase non configuré.');return}let alive=true;sb.auth.getUser().then(({data})=>{if(alive)refresh(data.user)});const {data:{subscription}}=sb.auth.onAuthStateChange((type,session)=>{if(alive&&(type==='SIGNED_IN'||type==='SIGNED_OUT')){refresh(session?.user)}});return()=>{alive=false;subscription.unsubscribe()}},[sb]);
@@ -133,8 +149,21 @@ export default function ERP(){
    if(error)throw error;
    if(action!=='restore')setModerationMessages(current=>({...current,[id]:''}));
    await refresh(user);
-   setToast(({message:'Message envoyé au vendeur.',hide:'Annonce masquée et vendeur informé.',request_correction:'Correction demandée : annonce masquée jusqu’à une nouvelle validation.',restore:'Annonce renvoyée en modération.',delete:'Annonce supprimée du catalogue ; historique conservé.'})[action]||'Action enregistrée.');
+   setToast(({message:'Message envoyé au vendeur.',hide:'Annonce masquée et vendeur informé.',request_correction:'Correction demandée et notification créée. L’annonce reste visible si elle était publiée. Prépare maintenant la relance WhatsApp.',restore:'Annonce renvoyée en modération.',delete:'Annonce supprimée du catalogue ; historique conservé.'})[action]||'Action enregistrée.');
   }catch(e){setToast(e.message||'Impossible de modifier cette annonce.')}
+  finally{setBusy(false)}
+ }
+
+ async function confirmCorrectionWhatsApp(id){
+  if(!sb||!user||busy)return;
+  if(!window.confirm('Confirmer uniquement après avoir envoyé le message dans WhatsApp. Le lien seul ne transmet pas le message.'))return;
+  setBusy(true);setToast('');
+  try{
+   const {error}=await sb.rpc('campus_mark_correction_whatsapp_sent',{p_id:id});
+   if(error)throw error;
+   await refresh(user);
+   setToast('Relance WhatsApp marquée comme envoyée par votre compte.');
+  }catch(e){setToast(e.message||'Impossible de confirmer la relance WhatsApp.')}
   finally{setBusy(false)}
  }
  async function markAdminNotification(id){if(!sb)return;const when=new Date().toISOString();const {error}=await sb.from('campus_notifications').update({read_at:when}).eq('id',id);if(error){setToast('Impossible de marquer cette notification comme lue.');return;}setNotifications(arr=>arr.map(n=>n.id===id?{...n,read_at:when}:n));}
@@ -287,6 +316,24 @@ export default function ERP(){
  </>}{sellerFilter&&<div className="campus-erp-seller-filter"><span>Annonces de <strong>{nameOf(sellerFilter)}</strong></span><button type="button" onClick={()=>setSellerFilter(null)}>Afficher toutes les annonces</button></div>}{!sellerListings.length?<div className="empty-panel">{tab==='review'?'Aucune annonce en attente de validation.':listingFiltersActive?'Aucune annonce ne correspond aux filtres choisis.':showDeleted?'Aucune annonce supprimée.':'Aucune annonce dans cette section.'}</div>:<div className="listing-grid">{sellerListings.map(l=><article className="listing-card" key={l.id}><div className="listing-cover">{l.images?.[0]?<img src={l.images[0]} alt={l.title}/>:<div className="placeholder-cover"><Icon name="package" size={46}/></div>}</div><div className="listing-body"><span className={'status-tag status-'+l.status}>{l.is_revision?'Modification à valider':status[l.status]||l.status}</span>{!l.is_revision&&revisions.some(r=>r.listing_id===l.id&&r.status==='pending')&&<span className="campus-revision-live-tag">Modifications en attente · annonce toujours en ligne</span>}<h3>{l.title}</h3><p className="muted">{l.description}</p><strong>{curr(l.price,l.currency)}</strong><div className="listing-meta">{l.category_proposal&&l.status==='pending'?'Catégorie à valider':l.category} · {l.images?.length||0} photo(s)</div>
 <SellerProfileCard key={l.seller_id} sellerId={l.seller_id} profile={profileOf(l.seller_id)} sb={sb} onOpenProfile={openStudentProfile}/>
 
+{!l.is_revision&&corrections.filter(r=>r.listing_id===l.id).slice(0,1).map(req=>{
+ const href=campusWhatsAppReminder(profileOf(l.seller_id),l,req);
+ return <section key={req.id} className="campus-correction-followup" aria-label={'Demande de changement pour '+l.title}>
+  <div className="campus-correction-followup-top"><strong>Demande de changement transmise</strong>
+   <span>{req.status==='requested'?'En attente de correction':req.status==='submitted'?'Correction envoyée en validation':req.status==='resolved'?'Correction validée':req.status==='masked'?'Annonce masquée':'Remplacée par une nouvelle demande'}</span>
+  </div>
+  <p>{req.message}</p>
+  <small>Créée le {new Date(req.created_at).toLocaleString('fr-FR',{timeZone:'Africa/Lubumbashi'})}
+   {req.seen_at?' · Alerte ouverte par le vendeur':' · Alerte non encore confirmée'}</small>
+  {req.status!=='superseded'&&<div className="campus-correction-whatsapp-actions">
+   {href?<a href={href} target="_blank" rel="noopener noreferrer" className="campus-correction-whatsapp-link">Ouvrir WhatsApp avec le message préparé</a>:<span className="campus-correction-whatsapp-missing">Numéro WhatsApp du vendeur non renseigné ou invalide.</span>}
+   {req.whatsapp_sent_at?<span className="campus-correction-whatsapp-done">Relance WhatsApp déclarée envoyée le {new Date(req.whatsapp_sent_at).toLocaleString('fr-FR',{timeZone:'Africa/Lubumbashi'})}</span>:href&&<button type="button" disabled={busy} onClick={()=>confirmCorrectionWhatsApp(req.id)}>J’ai envoyé le WhatsApp</button>}
+  </div>}
+  <small>Le message WhatsApp n'est pas envoyé automatiquement : il faut cliquer sur Envoyer dans WhatsApp, puis confirmer ici.</small>
+ </section>;
+})}
+
+
 {l.is_revision&&<section className="campus-revision-comparison" aria-label="Comparaison de la version publique et des modifications">
  <strong>Modification d’une annonce déjà publiée</strong>
  <p>La version approuvée reste visible aux acheteurs jusqu’à une validation. En cas de refus, elle reste inchangée.</p>
@@ -314,12 +361,12 @@ export default function ERP(){
  placeholder="Ex. Ajoute une photo nette du produit, sans filtre, et précise l'état de la batterie."/>
  <div className="campus-moderation-actions">
  {l.status!=='archived'&&l.status!=='sold'&&<button className="campus-moderation-btn" disabled={busy} type="button" onClick={()=>moderateListing(l.id,'message')}>Envoyer un message</button>}
- {['draft','pending','published','rejected','hidden'].includes(l.status)&&<button className="campus-moderation-btn primary" disabled={busy} type="button" onClick={()=>moderateListing(l.id,'request_correction')}>Demander une correction</button>}
+ {['draft','pending','published','rejected','hidden'].includes(l.status)&&<button className="campus-moderation-btn primary" disabled={busy} type="button" onClick={()=>moderateListing(l.id,'request_correction')}>Demander un changement</button>}
  {['draft','pending','published','rejected'].includes(l.status)&&<button className="campus-moderation-btn caution" disabled={busy} type="button" onClick={()=>moderateListing(l.id,'hide')}>Masquer</button>}
  {l.status==='hidden'&&<button className="campus-moderation-btn primary" disabled={busy} type="button" onClick={()=>moderateListing(l.id,'restore')}>Remettre en validation</button>}
  {canStaff&&!['reserved','sold'].includes(l.status)&&<button className="campus-moderation-btn danger" disabled={busy} type="button" onClick={()=>moderateListing(l.id,'delete')}>Supprimer l'annonce</button>}
  </div>
- <small className="campus-moderation-footnote">Une annonce masquée reste enregistrée, mais n'apparaît plus dans le catalogue. Dès que le vendeur la modifie, elle revient en validation.</small>
+ <small className="campus-moderation-footnote">Une demande de changement avertit le vendeur sans masquer automatiquement une annonce déjà publiée. Le masquage immédiat reste une décision de modération distincte.</small>
  </section>}
 
 {l.status==='pending'&&<section className="campus-review-decision"><label htmlFor={'review-reason-'+l.id}>Motif du refus <span>(facultatif, transmis au vendeur)</span></label><textarea id={'review-reason-'+l.id} rows={2} maxLength={600} value={moderationMessages[l.id]||''} onChange={e=>setModerationMessages(prev=>({...prev,[l.id]:e.target.value}))} placeholder="Ex. Photo floue, informations inexactes, description à préciser…"/><div className="action-row">
