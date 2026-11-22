@@ -63,3 +63,12 @@
 .campus-student-history li p{color:#594c6f;margin:3px 0;white-space:pre-line;overflow-wrap:anywhere}
 @media(max-width:1050px){.campus-student-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:680px){.campus-student-page{gap:15px}.campus-student-identity{padding:17px;gap:13px;align-items:flex-start}.campus-student-avatar{width:68px;height:68px;font-size:29px;box-shadow:0 0 0 3px #f0eafe}.campus-student-identity h1{font-size:22px}.campus-student-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.campus-student-kpi{min-height:87px;padding:13px}.campus-student-kpi>strong{font-size:23px}.campus-student-tabs{flex-wrap:nowrap;overflow:auto;scrollbar-width:none;padding-bottom:3px}.campus-student-tabs button{white-space:nowrap;flex-shrink:0}.campus-student-listing{gap:11px;padding:11px}.campus-student-cover{width:76px;min-width:76px;height:88px}.campus-student-listing h3{font-size:14px}.campus-student-removal{padding:10px}.campus-student-listing-actions{gap:6px}}
+
+
+.campus-student-avatar-button{flex-shrink:0;padding:0;border:0;background:transparent;border-radius:50%;cursor:zoom-in}
+.campus-student-avatar-button:focus-visible{outline:3px solid #6b4cd6;outline-offset:5px}
+.campus-student-modal{position:fixed;inset:0;z-index:1100;display:grid;place-items:center;padding:24px;background:rgba(19,12,34,.79);backdrop-filter:blur(9px)}
+.campus-student-modal-inner{position:relative;display:grid;justify-items:center;gap:22px;width:min(390px,100%);padding:48px 20px 29px;border-radius:23px;background:#fff;box-shadow:0 18px 80px #120a29}
+.campus-student-modal-inner .campus-student-avatar{width:min(240px,65vw);height:min(240px,65vw);font-size:70px}
+.campus-student-modal-inner>p{font-weight:750;font-size:16px;color:#211c39;text-align:center;margin:0}
+.campus-student-modal-close{position:absolute;right:15px;top:12px;width:36px;height:36px;border:0;border-radius:50%;font-size:27px;background:#efeaf7;color:#3d2d59;cursor:pointer}
