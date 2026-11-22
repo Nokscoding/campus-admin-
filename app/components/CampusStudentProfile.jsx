@@ -63,6 +63,8 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
  const [search,setSearch]=useState('');
  const [expanded,setExpanded]=useState({});
  const [truncated,setTruncated]=useState(false);
+ const [avatarFull,setAvatarFull]=useState(false);
+ useEffect(()=>{if(!avatarFull)return;const onKey=e=>{if(e.key==='Escape')setAvatarFull(false)};document.addEventListener('keydown',onKey);return()=>document.removeEventListener('keydown',onKey)},[avatarFull]);
  const load=useCallback(async()=>{
   if(!sb||!studentId)return;
   setLoading(true);setError('');
@@ -72,14 +74,14 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
     .eq('user_id',studentId).maybeSingle();
    const all=[];
    let maxed=false;
-   for(let offset=0;offset<1500;offset+=200){
+   for(let offset=0;offset<1600;offset+=200){
     const {data,error}=await sb.from('campus_listings')
      .select('id,seller_id,title,description,price,currency,category,status,images,created_at')
      .eq('seller_id',studentId).order('created_at',{ascending:false}).range(offset,offset+199);
     if(error)throw error;
     all.push(...(data||[]));
     if((data||[]).length<200)break;
-    if(offset+200>=1500)maxed=true;
+    if(offset+200>=1600)maxed=true;
    }
    const relatedAudits=[],relatedOrders=[];
    for(let i=0;i<all.length;i+=70){
@@ -149,7 +151,7 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
    <button type="button" className="campus-student-refresh" onClick={load} disabled={loading}>{loading?'Chargement…':'Actualiser la fiche'}</button>
   </div>
   <div className="campus-student-identity">
-   <ProfileAvatar profile={profile} sb={sb}/>
+   <button className="campus-student-avatar-button" type="button" onClick={()=>setAvatarFull(true)} aria-label="Agrandir la photo de profil" title="Agrandir la photo"><ProfileAvatar profile={profile} sb={sb}/></button>
    <div className="campus-student-identity-info">
     <span className="campus-student-overline">FICHE ÉTUDIANT · CAMPUS ERP</span>
     <h1>{profile?.display_name?.trim()||'Profil étudiant'}</h1>
@@ -161,6 +163,7 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
     </div>
    </div>
   </div>
+  {avatarFull&&<div className="campus-student-modal" role="presentation" onClick={e=>{if(e.target===e.currentTarget)setAvatarFull(false)}}><section className="campus-student-modal-inner" role="dialog" aria-modal="true" aria-label="Photo de profil agrandie"><button type="button" className="campus-student-modal-close" onClick={()=>setAvatarFull(false)} aria-label="Fermer">×</button><ProfileAvatar profile={profile} sb={sb}/><p>{profile?.display_name?.trim()||'Étudiant CAMPUS'}</p></section></div>}
   {error&&<div className="campus-student-error" role="alert">{error}<button type="button" onClick={load}>Réessayer</button></div>}
   <div className="campus-student-kpis" aria-label="Résumé des annonces">
    {[
@@ -178,7 +181,7 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
   <label className="campus-student-search">Rechercher une annonce
    <input type="search" placeholder="Titre, catégorie ou description" value={search} onChange={e=>setSearch(e.target.value)}/>
   </label>
-  {truncated&&<p className="campus-student-warning">Ce compte a plus de 1 500 annonces : seuls les enregistrements les plus récents sont chargés.</p>}
+  {truncated&&<p className="campus-student-warning">Ce compte a plus de 1 600 annonces : seuls les enregistrements les plus récents sont chargés.</p>}
   {loading?<div className="campus-student-empty" role="status">Chargement des annonces et de leur historique…</div>:
    !visible.length?<div className="campus-student-empty">Aucune annonce correspondant à ce filtre.</div>:
    <div className="campus-student-list">
@@ -190,7 +193,7 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
        {l.removed&&<span className={'campus-student-origin campus-student-origin-'+l.removed.kind}>{l.removed.label}</span>}
       </div>
       <h3>{l.title}</h3>
-      <p className="campus-student-listing-sub">{l.category} · {money(l.price,l.currency)} · Publiée/déposée le {dateLabel(l.created_at)}</p>
+      <p className="campus-student-listing-sub">{l.category} · {money(l.price,l.currency)} · Déposée le {dateLabel(l.created_at)}</p>
       {l.removed&&<div className="campus-student-removal">
        <strong>{l.removed.label}</strong>
        {l.removed.when&&<span>Le {dateLabel(l.removed.when)}</span>}
