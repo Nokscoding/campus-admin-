@@ -130,6 +130,20 @@ export const CAMPUS_MESSAGE_TEMPLATES=[
     "text": "{{salutation}},\n\nNous revenons vers toi au sujet de la demande de correction de « {{produit}} ».\n\nCorrection attendue : {{details}}\n\nMerci d’effectuer la modification dès que possible. Si tu rencontres une difficulté, notre équipe reste à ta disposition."
   },
   {
+    "id": "correction-thanks-submitted",
+    "category": "Modération",
+    "title": "Remercier après une correction demandée",
+    "description": "Le vendeur a modifié son annonce et attend la validation.",
+    "text": "{{salutation}},\n\nNous avons bien reçu les modifications que tu as apportées à ton annonce « {{produit}} » à la suite de notre demande.\n\nNous tenons à te remercier d’avoir pris en compte nos remarques et d’avoir respecté les règles de CAMPUS. Ta coopération nous aide à maintenir une plateforme fiable et sécurisée pour tous les étudiants.\n\nNotre équipe va maintenant examiner les changements proposés. Tu recevras une notification dès qu’une décision sera prise.\n\nMerci encore pour ta compréhension et ta confiance !"
+  },
+  {
+    "id": "correction-thanks-approved",
+    "category": "Modération",
+    "title": "Remercier après une correction validée",
+    "description": "Les modifications demandées ont été approuvées.",
+    "text": "{{salutation}},\n\nNous avons vérifié les modifications effectuées sur ton annonce « {{produit}} » et nous te confirmons qu’elles ont été approuvées.\n\nMerci d’avoir suivi les recommandations de notre équipe et d’avoir respecté les règles de CAMPUS. Cette collaboration nous permet de protéger les acheteurs comme les vendeurs et de proposer des annonces de meilleure qualité.\n\nTon annonce est maintenant à jour. Nous te souhaitons une excellente vente sur CAMPUS !"
+  },
+  {
     "id": "listing-hidden",
     "category": "Modération",
     "title": "Annonce masquée",
