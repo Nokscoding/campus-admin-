@@ -52,7 +52,7 @@ function deletionLabel(listing,events,profileId,staffIds){
  }
  return {label,kind,reason:typeof e.details?.message==='string'?e.details.message:null,when:e.created_at};
 }
-export default function CampusStudentProfile({sb,studentId,initialProfile,onBack,onManageListing,onEditListing,staff=[]}){
+export default function CampusStudentProfile({sb,studentId,initialProfile,onBack,onManageListing,onEditListing,onManageStaff,staff=[]}){
  const [profile,setProfile]=useState(initialProfile||null);
  const [listings,setListings]=useState([]);
  const [audits,setAudits]=useState([]);
@@ -151,7 +151,7 @@ export default function CampusStudentProfile({sb,studentId,initialProfile,onBack
  return <section className="campus-student-page">
   <div className="campus-student-topbar">
    <button type="button" className="campus-student-back" onClick={onBack}>← Retour aux profils</button>
-   <button type="button" className="campus-student-refresh" onClick={load} disabled={loading}>{loading?'Chargement…':'Actualiser la fiche'}</button>
+   <div className="campus-student-topbar-actions">{onManageStaff&&<button type="button" className="campus-student-access-trigger" onClick={()=>onManageStaff(studentId)}>Gestion de l’accès ERP</button>}<button type="button" className="campus-student-refresh" onClick={load} disabled={loading}>{loading?'Chargement…':'Actualiser la fiche'}</button></div>
   </div>
   <div className="campus-student-identity">
    <button className="campus-student-avatar-button" type="button" onClick={()=>setAvatarFull(true)} aria-label="Agrandir la photo de profil" title="Agrandir la photo"><ProfileAvatar profile={profile} sb={sb}/></button>
