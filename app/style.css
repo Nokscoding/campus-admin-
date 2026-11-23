@@ -220,3 +220,9 @@
 .campus-admin-edit-entry-button:disabled{opacity:.5;cursor:not-allowed}
 .campus-admin-edit-entry>span{font-size:11px;color:#665585;line-height:1.4}
 @media(max-width:560px){.campus-admin-edit-entry{align-items:stretch;flex-direction:column}.campus-admin-edit-entry-button{width:100%}}
+
+
+/* Gestion de l'accès ERP depuis le répertoire des étudiants. */
+.campus-erp-seller-access-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:#5c35bc;border:1px solid #5c35bc;border-radius:9px;color:#fff;padding:9px 12px;font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}
+.campus-erp-seller-access-button:hover{background:#46299b}
+@media(max-width:700px){.campus-erp-seller-head{flex-wrap:wrap}.campus-erp-seller-access-button{margin-left:auto;max-width:100%}}
