@@ -1,0 +1,38 @@
+
+.campus-role-backdrop{position:fixed;inset:0;z-index:2200;padding:15px;background:rgba(20,13,37,.76);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center}
+.campus-role-dialog{width:min(560px,100%);max-height:calc(100dvh - 30px);overflow:auto;background:#fff;border-radius:20px;box-shadow:0 25px 80px rgba(17,8,30,.29);color:#2f2447}
+.campus-role-heading{display:flex;gap:14px;justify-content:space-between;padding:25px 25px 20px;border-bottom:1px solid #ebe5f0;align-items:flex-start}
+.campus-role-heading small{font-size:10px;font-weight:850;letter-spacing:.095em;color:#7150a6}
+.campus-role-heading h2{font-size:23px;line-height:1.2;letter-spacing:-.025em;color:#281c40;margin:7px 0}
+.campus-role-heading p{font-size:13px;color:#81748c;margin:0;overflow-wrap:anywhere}
+.campus-role-close{background:#faf8fd;color:#594676;border:1px solid #e6e0ee;border-radius:50%;width:34px;height:34px;font-size:23px;cursor:pointer;flex-shrink:0}
+.campus-role-form{display:grid;gap:16px;padding:22px 25px 25px}
+.campus-role-existing{display:grid;gap:5px;background:#f7f5fb;padding:13px 14px;border-radius:10px}
+.campus-role-existing span{color:#817592;font-size:11px}
+.campus-role-existing strong{color:#514276;font-size:13px}
+.campus-role-select{display:grid;gap:7px;font-size:12px;font-weight:750;color:#564a68}
+.campus-role-select select{padding:13px;border:1px solid #dcd4e8;border-radius:11px;color:#2f2347;background:#fff;font:inherit;font-size:14px;min-width:0;width:100%}
+.campus-role-description{display:grid;gap:5px;padding:13px 15px;background:#f5f2fc;border:1px solid #e2d8f4;color:#645479;font-size:12px;line-height:1.65;border-radius:11px;margin:0}
+.campus-role-description strong{font-size:13px;color:#493481}
+.campus-role-description-alert{background:#fff6eb;border-color:#f3dfbe;color:#86612b}
+.campus-role-description-alert strong{color:#985b1f}
+.campus-role-active{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:#4c3d64}
+.campus-role-active input{width:18px;height:18px;accent-color:#643cc6}
+.campus-role-new-note{padding:12px 14px;border-radius:10px;background:#f9f7fb;border:1px solid #eee9f4;color:#6b5e7b;font-size:12px;line-height:1.6}
+.campus-role-what-button{justify-self:start;background:transparent;border:0;text-decoration:underline;text-underline-offset:3px;color:#6540af;font-family:inherit;font-weight:700;font-size:12px;cursor:pointer;padding:0}
+.campus-role-permissions{display:grid;gap:12px;padding:13px;border:1px solid #eae4f2;border-radius:10px}
+.campus-role-permissions>div{display:grid;gap:3px}
+.campus-role-permissions strong{font-size:12px;color:#44335c}
+.campus-role-permissions p{font-size:11px;color:#80748c;margin:0;line-height:1.5}
+.campus-role-confidentiality{margin:0;font-size:11px;color:#867c92;line-height:1.65}
+.campus-role-error{color:#9e334b;background:#fff0f2;border:1px solid #f1cbd4;border-radius:10px;padding:12px;font-size:12px;line-height:1.5}
+.campus-role-footer{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+.campus-role-footer button{border:1px solid #e2d9ed;background:#fff;border-radius:10px;color:#5a447b;font:inherit;font-size:12px;font-weight:820;padding:12px 15px;cursor:pointer}
+.campus-role-footer .campus-role-save{background:#5e35c9;color:#fff;border-color:#5e35c9}
+.campus-role-footer .campus-role-disable{background:#a33c50;color:#fff;border-color:#a33c50}
+.campus-role-footer button:disabled{opacity:.48;cursor:not-allowed}
+.campus-seller-access-entry{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px;border-top:1px solid #eee7f5;padding-top:10px}
+.campus-seller-access-entry span{font-size:11px;color:#7a6d8f;font-weight:750}
+.campus-seller-access-entry button,.campus-student-access-trigger{background:#5c34bf;border:1px solid #5c34bf;color:#fff;padding:10px 12px;border-radius:9px;font-size:12px;font-family:inherit;font-weight:790;cursor:pointer}
+.campus-seller-access-entry button:hover,.campus-student-access-trigger:hover{background:#4d2a9f}
+@media(max-width:620px){.campus-role-backdrop{padding:7px}.campus-role-dialog{max-height:calc(100dvh - 14px);border-radius:15px}.campus-role-heading{padding:17px}.campus-role-form{padding:17px}.campus-role-footer{flex-direction:column-reverse}.campus-role-footer button{width:100%}.campus-student-access-trigger{width:100%}}
