@@ -72,3 +72,7 @@
 .campus-student-modal-inner .campus-student-avatar{width:min(240px,65vw);height:min(240px,65vw);font-size:70px}
 .campus-student-modal-inner>p{font-weight:750;font-size:16px;color:#211c39;text-align:center;margin:0}
 .campus-student-modal-close{position:absolute;right:15px;top:12px;width:36px;height:36px;border:0;border-radius:50%;font-size:27px;background:#efeaf7;color:#3d2d59;cursor:pointer}
+
+
+.campus-student-topbar-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+@media(max-width:650px){.campus-student-topbar-actions{width:100%;flex-direction:column}.campus-student-topbar-actions>button{width:100%}.campus-student-back{width:100%}}
